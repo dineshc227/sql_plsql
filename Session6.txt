@@ -1,0 +1,144 @@
+Sql sublanguage:
+---------------
+ddl -create,alter,truncate,drop,rename
+dml -insert,update,delete,merge (Session25)
+dql - select
+tcl - commit,rollback,savepoint
+dcl - grant,revoke
+
+
+Delete command:
+--------------
+* is used to delete single record or group of records or all records temporarly.
+
+* it can be rollback.
+
+syntax:
+
+delete from <tablename> where <condition>;
+
+delete from emp where ename='SMITH'
+delete from emp where deptno=20
+delete from emp where sal>=2500;
+delete from emp where comm is not null;
+delete from emp where ename like 'S%';
+delete from emp; -- all records
+
+
+rollback;
+
+
+Transaction Control Language:
+-----------------------------
+* Transaction is nothing but a logical unit of work(insert,update,delete).
+
+commit - To make the transaction permanently.
+
+rollback - To cancel the transaction.
+
+savepoint - is used to divide the large transaction into small transaction.
+
+--example1
+
+select * from emp  -- 14 rows
+delete from emp
+select * from emp  -- 0 rows
+rollback
+select * from emp  -- 14 rows
+
+--example2
+
+select * from dept  -- 4 rows
+delete from dept where deptno=40
+select * from dept  -- 3 rows
+commit
+select * from dept  -- 3 rows
+
+--example3
+
+create table e1(ename varchar2(20))
+savepoint s1
+insert into e1 values('aaa');
+insert into e1 values('bbb');
+insert into e1 values('ccc');
+savepoint s2
+insert into e1 values('aaa');
+insert into e1 values('bbb');
+insert into e1 values('ccc');
+savepoint s3
+insert into e1 values('aaa');
+insert into e1 values('bbb');
+insert into e1 values('ccc');
+select * from e1  --9 rows
+rollback to s3
+select * from e1 -- 6 rows
+rollback to s2
+select * from e1  -- 3 rows
+commit
+select * from e1  -- 3 rows
+
+--example4
+select * from emp  -- 14 rows
+select * from dept -- 3 rows
+savepoint s1
+delete from emp
+savepoint s2
+delete from dept
+select * from emp  -- 0 rows
+select * from dept  -- 0 rows
+rollback to s2
+select * from emp  -- 0 rows
+select * from dept  -- 3 rows
+
+
+Data Control Language:
+----------------------
+1.Grant
+2.Revoke
+
+Grant is used to give the permission from one user into another user(Normal user).
+
+Revoke is used to remove the permission from another user(Normal user).
+
+syntax:
+grant <privileges> on <tablename> to <username>;
+revoke <privileges> on <tablename> from  <username>;
+
+privileges -> select,insert,update,delete,execute....
+
+step1: To create Normal user
+
+create user Mallareddy identified by 123;
+grant connect,resource to Mallareddy;
+
+Dhinesh user
+-----------------------------------------------------------------------
+1.grant select,insert,update,delete on emp to Mallareddy;
+3.revoke select,insert,update,delete on emp from Mallareddy;
+
+
+Mallareddy user
+-----------------------------------------------------------------------
+2.select * from Dhinesh.emp; --valid
+4.select * from  Dhinesh.emp; --invalid
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+Group By & Having Clause: 
+--------------------------- 
+
+1.How many employees who are working in different departments wise in the organization For QTP Information
+- - - select deptno, count(deptno) as employees from emp group by deptno
+
+2.List out the department wise maximum salary, minimum salary, average salary of the employees 
+
+ - - - select deptno, ,max(sal) as max,min(sal) as min,avg(sal) as avg from emp group by deptno
+
+3.List out the job wise maximum salary, minimum salary, average salaries of the employees. 
+
+- - - select job, max(sal) as max, min(sal) as min, avg(sal) as avg from emp group by job
+
+4.List out the no.of employees joined in every month in ascending order. 
+
+- - - select to_char(hiredate,'month') as month,count(hiredate) as count from emp group by to_char(hiredate,'month') order by month asc
+
+5.List out the no.of employees for each month wise
+
+- - - select to_char(hiredate,'month') as month,count(hiredate) as employees from emp group by to_char(hiredate,'month')
+
+6.List out the department id having atleast four employees. 
+
+
+
+7.How many employees joined in January month. 
+
+SELECT TO_CHAR(HIREDATE,'MON') AS MONTH,COUNT(HIREDATE)AS EMPLOYEES 
+FROM EMP
+WHERE TO_CHAR(HIREDATE,'MON') IN ('JAN') GROUP BY TO_CHAR(HIREDATE,'MON')
+
+8.How many employees who are joined in January or September month.
+
+1.SELECT  TO_CHAR(HIREDATE,'MON') AS MONTH,COUNT(HIREDATE) AS COUNT 
+FROM EMP
+WHERE TO_CHAR(HIREDATE,'MON') IN ('JAN','SEP') GROUP BY TO_CHAR(HIREDATE,'MON');
+
+2.SELECT TO_CHAR(ENAME), TO_CHAR(HIREDATE,'MON') AS MONTH,COUNT(HIREDATE) AS COUNT FROM EMP
+WHERE TO_CHAR(HIREDATE,'MON') IN ('JAN','SEP') GROUP BY TO_CHAR(ENAME),TO_CHAR(HIREDATE,'MON');
+
+9.How many employees who are joined in 1981. 
+
+1.SELECT TO_CHAR(HIREDATE,'YYYY')AS YEAR,COUNT(HIREDATE) AS JOINED 
+FROM EMP
+WHERE TO_CHAR(HIREDATE,'YYYY') IN (1981) GROUP BY TO_CHAR(HIREDATE,'YYYY')
+
+10.How many employees joined in 1981 and 1982. 
+
+
+SELECT TO_CHAR(HIREDATE,'YYYY') AS YEAR,COUNT(HIREDATE) AS JOINED FROM EMP
+WHERE TO_CHAr(HIREDATE,'YYYY') IN (1981,1982) group by TO_CHAR(HIREDATE,'YYYY')
+11.How many employees who are joined in March 1981.
+
+12.Which is the department id, having greater than or equal to 1 employees joined in April 1981.   
+ 
+select to_char(hiredate,'yyyy') as year,count(hiredate) as joined from emp 
+where to_char(hiredate,'yyyy') in ('APRIL',1981) GROUP BY to_char(hiredate,'yyyy')
+
+
+kindly send a mail : gshekar816@gmail.com

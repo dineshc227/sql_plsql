@@ -1,0 +1,231 @@
+create table emp1(ename varchar2(20),empno number(4),salary number(5));
+
+insert into emp1 values('raj',101,25000)
+insert into emp1 values('kumar',102,35000)
+insert into emp1 values('shekar',103,40000)
+
+select ename,empno,salary from emp1
+select ename,salary from emp1
+select * from emp1
+
+alter command:
+-------------
+* is used to adding a new column /field in a table.
+* is used to delete particular column /field in a table.
+* is used to modify existing column in a table(name,size).
+
+How to adding a new column / Field syntax?
+
+alter table <tablename> add <fieldname> <fieldtype>(size);
+
+alter table emp1 add hra number(4);
+
+--verify
+
+select * from emp1;
+
+or
+desc emp1;
+
+Note: Null is an undefined values or undefined symbols.
+
+--How to modify the column/field size?
+
+syntax:
+
+alter table <tablename> modify <fieldname> <fieldtype>(size);
+
+ex:
+
+alter table emp1 modify ename varchar2(30);
+
+--verify
+
+desc emp1;
+
+--How to delete particular column in a table?
+
+syntax:
+
+alter table <tablename> drop column <fieldname>;
+
+ex
+
+alter table emp1 drop column hra;
+
+--verify
+
+select * from emp1;
+
+or
+
+desc emp1;
+
+--How to modify the column names?
+
+syntax:
+
+alter table <tablename> rename column <oldcolname> to <newcolname>;
+
+alter table emp1 rename column empno to psid;
+
+--verify
+
+select * from emp1;
+
+or
+
+desc emp1;
+
+
+Truncate command:
+----------------
+* is used to delete all records permanently (Except fieldnames).
+
+* it cannot be rollback.
+
+syntax:
+
+Truncate table <tablename>;
+
+ex:
+
+truncate table emp1;
+
+--verify
+
+select * from emp1;
+
+Drop command:
+-------------
+* is used to delete whole table or whole object permanently.
+
+* it cannot be rollback.
+
+syntax:
+
+drop table <tablename>;
+
+ex:
+
+drop table emp1;
+
+-verfiy
+select * from emp1;
+
+
+sql sublanguage:
+----------------
+ddl - create,alter,truncate,drop,rename
+dml - insert,update,delete,merge
+dql - select (day to day work)
+tcl - commit,rollback,savepoint
+dcl - grant,revoke
+
+
+--How to modify the tablename?
+syntax:
+
+rename <oldtablename> to <newtablename>;
+rename employee to emp;
+
+--verify
+
+select * from emp;
+or
+select * from tab;
+
+--How to run plsql script or demotables script?
+
+@ fullfilepath\filename.sql
+
+@ C:\sql\oracle.sql
+
+select * from tab
+
+
+--list all bank details
+select * from bank
+--list all bank_master table
+select * from bank_master
+--list all product details
+select * from product
+--list all dept details
+select * from dept
+--list all emp details
+select * from emp
+--list all che details
+select * from che
+--list all hyd details
+select * from hyd
+
+--list all emp details
+select * from emp
+--list all ename,empno,sal from emp table
+select ename,empno,sal from emp
+--list only smith details
+select * from emp where ename='SMITH'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

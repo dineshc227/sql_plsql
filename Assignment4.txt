@@ -1,0 +1,55 @@
+Joins Simple join 
+
+48.List out employees with their department names 
+
+select emp.ename,dept.dname from emp,dept where emp.deptno=dept.deptno
+
+49.Display employees with their designations (jobs) 
+
+
+
+50.Display the employees with their department name and regional groups. 
+
+51.How many employees who are working in different departments and display with department name. 
+
+52.How many employees who are working in sales department. 
+
+53.Which is the department having greater than or equal to 5 employees and display the department names in ascending order. 
+
+54.How many employees in the organization count by job.
+
+55.How many employees working in “New York”.
+
+
+Non  Equi Join: 
+
+56.Display employee details with salary grades. 
+
+57.List out the no. of employees on grade wise. 
+
+58.Display the employ salary grades and no. of employees between 2000 to 5000 range of salary.  
+
+Self Join: 
+
+59.Display the employee details with their manager names. 
+
+60.Display the employee details who earn more than their managers salaries.
+
+61.Show the no. of employees working under every manager.  
+
+Outer Join: 
+
+61.Display employee details with all departments. 
+
+62.Display all employees in sales or operation departments.   
+
+Set Operators:  
+
+63.List out the distinct jobs in Sales and Accounting Departments. 
+
+64.List out the ALL jobs in Sales and Accounting Departments.
+
+65.List out the common jobs in Research and Accounting Departments in ascending order.  
+
+ 
+

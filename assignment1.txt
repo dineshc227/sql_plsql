@@ -1,0 +1,56 @@
+Simple Queries:  
+
+@ filepath\filename.sql
+@ E:\ORACLE.SQL
+
+1.List all the employee details 
+SELECT*FROM EMP 
+
+2.List all the department details 
+SELECT*FROM DEPT
+
+3.List all job details 
+SELECT JOB FROM EMP
+
+4.List all the locations 
+SELECT LOC FROM EMP 
+
+5.List out ename,salary, commission for all employees 
+SELECT ENAME,SALARY,COMM FROM EMP
+
+6.List out employee_id,last name,department id for all  employees and rename employee id as “ID  of the employee”, last name as “Name of the employee”, department id as  “department  ID”
+
+7.List out the employees anuual salary with their names only. 
+SELECT ENAME, SAL FROM EMP
+
+8.List the details about “SMITH” 
+SELECT*FROM EMP WHERE ENAME='SMITH'
+
+9.List out the employees who are working in department 20 
+SELECT*FROM EMP WHERE DEPTNO=20
+
+10.List out the employees who are earning salary between 3000 and 4500 
+SELECT*FROM EMP WHERE SAL BETWEEN 3000 AND 4500
+
+11.List out the employees who are working in department 10 or 20 
+SELECT*FROM EMP WHERE DEPTNO=10 AND DEPTNO=30
+
+12.Find out the employees who are not working in department 10 or 30 
+
+13.List out the employees whose name starts with “S” 
+SELECT*FROM EMP WHERE ENAME LIKE 'S%'
+
+14.List out the employees whose name start with “S” and end with “H”
+SELECT*FROM EMP WHERE ENAME LIKE 'S% AND ENAME LIKE '%H'
+
+15.List out the employees whose name length is 4 and start with “S”
+SELECT*FROM EMP WHERE ENAME LIKE '____S'
+
+16.List out the employees who are working in department 10 and draw the salaries more than 3500 
+
+17.list out the employees who are not receiving commission. 
+SELECR*FROM EMP WHERE COMM IS NULL
+
+Kindly send mail to : gshekar816@gmail.com
+
+

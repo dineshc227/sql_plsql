@@ -1,0 +1,194 @@
+plsql
+select statement syntax:
+
+select fieldname1,fieldname2,fieldname3 into variable1,variable2,variable3 
+from <tablename> where <condition>;
+
+
+-- plsql program to select dept details from dept table ?
+
+declare
+e1 dept.deptno%type;
+e2 dept.dname%type;
+e3 dept.loc%type;
+begin
+select deptno,dname,loc into e1,e2,e3 from dept
+where deptno=&deptno;
+dbms_output.put_line(e1||'    '||e2||'    '||e3);
+end;
+/
+
+
+declare
+e1 salgrade.grade%type;
+e2 salgrade.losal%type;
+e3 salgrade.hisal%type;
+begin
+select grade,losal,hisal into e1,e2,e3 from 
+salgrade where grade=&grade;
+dbms_output.put_line(e1 ||'    '||e2||'    '||e3);
+end;
+/
+
+
+declare
+e1 salgrade%rowtype;
+begin
+select * into e1 from salgrade where grade=&grade;
+dbms_output.put_line(e1.grade ||'    '||e1.losal||'    '||e1.hisal);
+end;
+/
+
+
+declare
+e1 dept.deptno%type;
+e2 dept.dname%type;
+e3 dept.loc%type;
+begin
+e1:=&deptno;
+e2:='&dname';
+e3:='&loc';
+insert into dept values(e1,e2,e3);
+dbms_output.put_line('1 row inserted');
+end;
+/
+
+declare
+e1 dept%rowTYPE;
+begin
+delete from dept where deptno=&e1;
+dbms_output.put_line('1 row deleted');
+end;
+/
+
+--write a plsql program to select ename and dname from corresponding table
+declare
+e1 emp.ename%type;
+d1 dept.dname%type;
+begin
+select emp.ename,dept.dname into e1,d1 from emp inner join dept on emp.deptno=dept.deptno and emp.empno=&empno;
+dbms_output.put_line(e1||'    '||d1);
+end;
+/
+
+
+
+/* Write PL SQL Program  to check the given number is armstrong or not. */
+
+n=153=> 1+125+27=> 153
+n=370=> 27+343+0=> 370
+n=371=> 27+343+1=> 371
+n=407=> 64+0+343=> 407
+
+c language algorithm:
+----------
+n=153;
+s=0;
+while n>0
+{
+r=n%10;
+s=s+pow(r,3);
+n=n/10;
+}
+
+plsql format
+
+n:=153;
+s:=0;
+while n>0
+loop
+r:=mod(n,10);
+s:=s+power(r,3);
+n:=n/10;
+end loop;
+
+
+declare
+n number(4);
+s number(4):=0;
+r number(4);
+t number;
+begin
+n:=&n;
+t:=n;
+while n>0 
+loop
+r:=mod(n,10);
+s:=s+power(r,3);
+n:=trunc(n/10);
+end loop;
+if(s=t) then
+dbms_output.put_line('The given number ' || t || 'is an armstrong number');
+else
+dbms_output.put_line('The given number ' || t || 'is not an armstrong number'); 
+end if;
+end;
+/
+Assignment:
+------------
+
+* Write a plsql program to display reverse number 
+n=697 => 796
+S=0
+
+WHILE (N>0)
+{
+R=N%10;
+S=S*10+R;
+N=N/10;
+}
+
+plsql format:
+
+n:=697;
+s:=0;
+while n>0
+loop
+r:=mod(n,10);
+s:=s*10+r;
+n:=n/10;
+end loop;
+--Write a plsql program to display reverse number;
+declare
+n number(4);
+s number(4):=0;
+t number(4);
+r number(4);
+begin
+n:=&n;
+t:=n;
+while t>0 
+loop
+r:=mod(t,10);
+s:=s*10+r;
+t:=trunc(t/10);
+end loop;
+dbms_output.put_line('Reverse number='||s);
+end;
+/
+
+* Write a plsql program to display sum of digits?
+
+n=697 => 22
+S:=0;
+WHILE (N>0)
+{
+R=N%10;
+S=S+R;
+N=N/10;
+}
+
+* Write a plsql program to display count of digits?
+
+n=748 => 3 digits
+s=0
+WHILE (N>0)
+{
+R=N%10; 
+S=S+1; 
+N=N/10; 
+}
+
+
+
+Kindly send a mail to : gshekar816@gmail.com

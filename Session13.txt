@@ -1,0 +1,296 @@
+--How to select first 5 records in before 12c?
+
+select * from (select ename,empno,sal,deptno,mgr,comm,job,dense_rank() over(order by sal desc) as rank from emp) 
+where rank<=5
+
+--How to select first 5 records in 12c?
+
+SELECT * FROM   emp ORDER BY sal DESC FETCH FIRST 5 ROWS ONLY;
+
+--How to select 4th records to 8 th records?
+
+SELECT * FROM   emp
+ORDER BY sal DESC
+OFFSET 4 ROWS FETCH NEXT 4 ROWS ONLY;
+
+--How to select percentage of rows?
+
+SELECT * FROM   emp
+ORDER BY sal DESC
+FETCH FIRST 50 PERCENT ROWS ONLY;
+
+--How to select 50% percentage of rows after 4th rows?
+
+SELECT * FROM   emp
+ORDER BY sal DESC
+OFFSET 4 ROWS FETCH NEXT 50 PERCENT ROWS ONLY;
+
+Database objects:
+----------------
+1.Table
+2.View
+3.synonym
+4.index
+5.sequence
+6.procedure
+7.function
+8.package
+9.Trigger
+
+Views: (FAQ)
+-----
+* A View is nothing but an image table or virtual table,which is created for a base table. 
+
+* A view can be created by taking all values from the base table or by taking only selected values from base table. 
+
+* It is a virtual table or creates a window like structure through which we can allow related users to view or modify related data.
+
+* Any modifications made through a view automatically updates the base table and vice versa.
+
+* View is a database object , which will store a query in compiled format, hence it is called "Stored Query".
+
+Note: If any changes in the view automatically reflected into table and vice versa.
+
+* View supports only DML And DQL.
+
+* view does not allocate memory and does not contain data.
+
+
+Advantages of views:
+---------------------
+
+1. Provides high security
+
+2. Improves performance
+
+3. Network traffic gets reduces
+
+4. Shortens SQL queries
+
+5. Supports to perform summarized calculation fastly
+
+6. Supports to INSERT/UPDATE/DELETE related data
+
+7. We can retrieve the data from many tables (joins)
+
+
+Types views available in oracle.
+
+1. Simple views /Read write view
+2. Read only views
+3. Check option views 
+4. Complex views
+5. Force views (FAQ)
+6. Materialized views
+
+
+Note: If we perform any modifications in base table, then those modifications automatically effected in view and vice-versa.
+
+* View does not contain data.
+
+* View does not allocate physical memory.
+
+* It supports DML and DQL (insert,update,delete,select)
+
+
+1. Simple views:
+	A view which is created in a single table refers to simple view.
+
+	These views will support to modify only when it contains all mandatory columns of base table.
+	These views will not contain group functions, mathematical expressions....etc.
+
+Syntax:
+
+CREATE [ OR REPLACE ] [ FORCE / NOFORCE ] VIEW view_name
+AS SELECT query
+[WITH READ ONLY / WITH CHECK OPTION];
+
+note:
+1. When base table is dropped, view will stop its working.
+2. When base table is back in database, view will start its working.
+
+Examples:
+
+create or replace view v11 as select * from emp
+select * from v11
+update v11 set ename='RAJ' where ename='SMITH'
+SELECT * FROM EMP
+CREATE OR REPLACE VIEW V12 AS SELECT ENAME,EMPNO,SAL FROM EMP
+SELECT * FROM V12
+CREATE OR REPLACE VIEW V13 AS SELECT * FROM EMP WHERE DEPTNO=20
+SELECT * FROM V13
+CREATE OR REPLACE VIEW V14 AS SELECT EMP.ENAME,DEPT.DNAME FROM EMP INNER JOIN DEPT 
+ON EMP.DEPTNO=DEPT.DEPTNO
+SELECT * FROM V14
+CREATE OR REPLACE VIEW V15 AS SELECT * FROM V11
+Create view v2 that stores a query for empno,ename,sal,deptno of all those employees related to 2 dept?
+CREATE VIEW V2
+AS
+SELECT EMPNO,ENAME,SAL,DEPTNO FROM EMP WHERE DEPTNO=20;
+SELECT * FROM V2;
+INSERT INTO V2 VALUES (1002,'Y',2000,20);
+INSERT INTO V2 VALUES (1003,'Z',3000,30);
+READ ONLY VIEWS:
+When a view is created as Read only view, it will not allow a user to perform DML operations through a view. A keyword called "WITH READ ONLY" should be associated.
+
+Create a read only view v3 that stores a query for empno,ename,sal,deptno of emp table?
+
+CREATE VIEW V3
+AS
+SELECT EMPNO,ENAME,SAL,DEPTNO FROM EMP
+WITH READ ONLY;
+SELECT * FROM V3;
+CHECK OPTION VIEWS:
+
+These views will support to insert the data into base table only for those records that get match with the condition mentioned at SELECT query.
+An option called "WITH CHECK OPTION" is used.
+
+create a check option view v4 that stores a query on emp table for empno,ename,deptno of 20 dept employees?
+
+CREATE VIEW V4
+AS
+SELECT EMPNO,ENAME,DEPTNO FROM EMP WHERE DEPTNO=20
+WITH CHECK OPTION;
+INSERT INTO V4 VALUES(2001,'A',20);
+INSERT INTO V4 VALUES(2002,'B',30); INVALID RECORD SINCE DEPTNO IF BEYOND THE CONDITION OF SELECT QUERY.
+SELECT * FROM V4;
+
+COMPLEX VIEWS: (FAQ)
+--------------------
+A view is said to be complex view, when it contains 
+any of the following;
+
+1. Group Functions
+2. Group By clause
+3. Joins
+4. Mathematical Expressions
+5. DISTINCT Keyword
+
+Note :
+By default complex view is non updatable view.
+
+
+
+CREATE VIEW V5
+AS
+SELECT deptno,SUM(sal) TS FROM emp GROUP BY deptno;
+SELECT * FROM V5;
+CREATE VIEW V6
+AS
+SELECT EMPNO,ENAME,JOB,SAL,DNAME,LOC FROM EMP,DEPT WHERE EMP.DEPTNO=DEPT.DEPTNO;
+SELECT * FROM V6;
+CREATE VIEW V7D
+SELECT EMPNO,ENAME,SAL,SAL*12 A_SAL FROM EMP;
+SELECT * FROM V7;
+CREATE VIEW V8
+AS
+SELECT DISTINCT DEPTNO FROM EMP;
+SELECT * FROM V8;
+
+FORCE VIEWS:
+------------
+* Force views are created on a table and column that which does not exists.
+
+* By default view is NOFORCE view.
+
+CREATE FORCE VIEW V9
+AS
+SELECT * FROM STUDENT;
+
+CREATE FORCE VIEW V10
+AS
+SELECT EMPNO,ENAME,JOB,SAL,TAX FROM EMP;
+To view the errors occured at the creation of Force view;
+SHOW ERRORS VIEW <view_name>
+SHOW ERRORS VIEW V9
+
+VIEWING THE INFORMATION ABOUT VIEWS:
+TAB & CAT : These predefined tables will provide object names i.e. view names and object type as view.
+
+USER_VIEWS : This table will provide the view name & the query which is stored in a view.
+SQL> DESC USER_VIEWS;
+SELECT VIEW_NAME,TEXT FROM USER_VIEWS;
+
+MATERIALIZED VIEW: (FAQ)
+-------------------
+* Materialized view is a database object that stores query output and precomputed result.
+
+* These views are created using MATERIALIZED VIEW option.
+
+* MV supports only supports DQL operations.
+
+* These views will store the compiled query and its output.
+
+* create materialized view mv1 as select deptno,sum(sal) as sum from emp group by deptno
+
+drop table student;
+
+CREATE TABLE STUDENT(SNAME VARCHAR2(10),
+SNO NUMBER(3) CONSTRAINT C1_SNO PRIMARY KEY,
+MARK NUMBER(3));
+
+INSERT INTO STUDENT VALUES('AAA',101,100);
+INSERT INTO STUDENT VALUES('BBB',102,200);
+INSERT INTO STUDENT VALUES('CCC',103,300);
+
+SELECT * FROM STUDENT;
+
+
+SQL> CREATE MATERIALIZED VIEW MV1 AS SELECT * FROM STUDENT;
+
+
+SQL> SELECT * FROM MV1;-- 3ROWS
+
+SQL> INSERT INTO STUDENT VALUES('XXX',104,600);
+
+SQL> INSERT INTO STUDENT VALUES('YYY',105,300);
+
+SQL> SELECT * FROM MV1;-- 3 ROWS
+
+
+--HOW TO UPDATE THE MATERIALZIED VIEW?
+
+SQL> EXEC DBMS_MVIEW.REFRESH('MVIEWNAME');
+
+DBMS_MVIEW -> PLSQL PACKAGE NAME
+REFRESH -> PROCEDURE NAME
+
+
+
+
+
+
+VIEWING MATERIALIZED INFORMATION:
+
+USER_MVIEWS : This predefined table provides the information of materialized view.
+
+SELECT * FROM USER_MVIEWS;
+	
+
+HOW TO DROP VIEW?
+
+DROP VIEW <VIEWNAME>
+
+HOW TO DROP MATERIALIZED VIEW?
+
+DROP MATERIALIZED VIEW MV1;
+
+
+Advantages of view:
+
+  1. To hide the complexity of the underlying database TABLE COLUMNS OR RECORDS, or customize the data for a set of users.
+
+ 2. Restrict access to specific rows in a table.
+   
+ 3. Restrict access to specific columns in a table.
+
+ 4. Join columns from multiple tables and present them as though they are part of a single table
+
+ 5  Present aggregate information (such as the results of the COUNT function)
+
+drop view viewname;
+
+
+
+
+

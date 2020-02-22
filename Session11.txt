@@ -1,0 +1,274 @@
+Joins
+-----
+* Joins are used to reterive the data from the multiple tables or multiple select statements.
+
+Types of join:
+-------------
+a.Inner join / Simple join / Natural joins
+b.outer join 
+c.self join
+d.cross join or cartesian join 
+
+Note: 
+set operators => adding records/rows from multiple tables
+joins  => adding fields/columns from multiples tables.
+
+1.inner join /Simple joins/ natural joins(To reterive the data from the multiple tables.)
+
+	a.Equi join (=)
+	b.Non Equi join (<,>,<=,>=,!=)
+
+2.outer join (To reterive the data from the multiple tables)
+	a.Left Outer join 
+	b.Right outer join 
+	c.Full outer join
+
+3. Self join (Joining the table itself using table alias name)
+
+4. Cross join / Cartesian join 
+
+* All possible combination values.
+
+* Without using conditional clause to 
+reterive the data from the multiple tables.
+
+* Multiply by two table records.
+
+
+
+Join Syntax:
+------------
+1.Sql syntax (<,>,<=,>=,!=,=) => (oracle rdbms)
+
+2.Ansi syntax( left outer join,right outer join,full outer join,cross join,inner join ....) (all rdbms)
+
+--Inner join sql syntax:
+-------------------------
+select table1.*,table2.* from table1,table2 where table1.commoncol=table2.commoncol
+
+--inner join ansi syntax:
+-------------------------
+select table1.*,table2.* from table1 inner join table2 on table1.commoncol=table2.commoncol
+
+
+Inner join ansi syntax (3 tables)
+---------------------------------
+select table1.*,table2.*,table3.* from table1 
+inner join table2 on table1.commoncol=table2.commoncol
+inner join table3 on table2.commoncol=table3.commoncol
+
+4 dept x 1000 emp => 4000
+
+Inner join ansi syntax (4 tables)
+---------------------------------
+select table1.*,table2.*,table3.*,table4.* from table1 
+inner join table2 on table1.commoncol=table2.commoncol
+inner join table3 on table2.commoncol=table3.commoncol
+inner join table4 on table3.commoncol=table4.commoncol;
+
+
+Left outer join syntax:
+-------------------------
+select table1.*,table2.* from table1 left outer join table2 on table1.commoncol=table2.commoncol
+
+
+right outer join syntax:
+-------------------------
+select table1.*,table2.* from table1 right outer join table2 on table1.commoncol=table2.commoncol
+
+
+full outer join syntax:
+-------------------------
+select table1.*,table2.* from table1 full outer join table2 on table1.commoncol=table2.commoncol
+
+Cross join syntax:
+-------------------
+select table1.*,table2.* from table1 cross join table2
+
+
+
+--display all ename and corresponding dname
+
+select emp.ename,dept.dname from emp,dept where emp.deptno=dept.deptno
+
+--ansi syntax
+select emp.ename,dept.dname from emp inner join dept on emp.deptno=dept.deptno
+
+--display all ename,deptname,location 
+
+select emp.ename,dept.DNAME,dept.loc from emp inner join dept on emp.deptno=dept.deptno
+
+--list all ename and corresponding job location 
+select emp.ename,dept.loc from emp inner join dept on emp.deptno=dept.deptno
+
+
+		hyd
+	ename	empno	salary
+	aaa	1001	10000 
+	bbb	1002	20000 
+	ccc	1003	30000 
+	ddd	1004	40000 
+	eee	1005	50000 
+	
+		
+		che
+	name	eno	sal
+	aaa	1001	2500
+	yyy	1003	4000
+	mmm	1005	3500
+	nnn	1007	3000
+	zzz	1009	3500
+
+	
+
+drop table hyd;
+drop table che;
+
+create table hyd(ename varchar2(10),empno number(4),salary number(5));
+
+create table che(name varchar2(10),eno number(4),sal number(5));
+
+insert into hyd values('aaa',1001,10000);
+insert into hyd values('bbb',1002,20000);
+insert into hyd values ('ccc',1003,30000);
+insert into hyd values ('ddd',1004,40000);
+insert into hyd values ('eee',1005,50000);
+
+insert into che values('xxx',1001,2500);
+insert into che values ('yyy',1003,4000);
+insert into che values ('mmm',1005,3500);
+insert into che values ('nnn',1007,3000);
+insert into che values ('zzz',1009,3500);
+
+
+--Equi join 
+select che.*,hyd.* from che inner join hyd on che.empno=hyd.empno
+
+--Non Equi join 
+select che.*,hyd.* from che inner join hyd on 
+che.empno !=hyd.empno
+
+--left outer join 
+select che.*,hyd.* from che left outer join hyd on che.empno=hyd.empno
+
+--right outer join 
+select che.*,hyd.* from che right outer join hyd on che.empno=hyd.empno
+
+--full outer join 
+select che.*,hyd.* from che full outer join hyd on che.empno=hyd.empno
+
+--cross join 
+select che.*,hyd.* from che cross join hyd
+
+	    customer
+	cname	amount
+	aaa	10000
+	syed	20000
+	raj	30000
+
+	    bank
+	bankname	interest
+	sbi		12
+	hdfc		10
+	icici		9
+
+--List all cname,bankname,amount,simpleinterest from corresponding table
+
+drop table customer1;
+drop table bank;
+
+create table customer1(cname varchar(20),amount int);
+
+insert into customer1 values('aaa',10000);
+insert into customer1 values('syed',20000);
+insert into customer1 values('raj',30000);
+
+create table bank(bankname varchar(20),interest int);
+
+insert into bank values('sbi',12);
+insert into bank values('sbh',10);
+insert into bank values('icici',9);
+
+
+
+
+select cname,bankname,amount,(amount * 5* interest)/100 as si from customer cross join bank
+
+
+
+
+Self join:(Joining the table itself using table alias name)
+
+--display all ename and corresponding mgrname
+
+		emp a
+
+ename	empno	sal	mgr	deptno
+SMITH	7369	800	7902	20
+ALLEN	7499	1600	7698	30
+WARD	7521	1250	7698	30
+JONES	7566	2975	7839	20
+MARTIN	7654	1250	7698	30
+BLAKE	7698	2850	7839	30
+CLARK	7782	2450	7839	10
+SCOTT	7788	3000	7566	20
+KING	7839	5000	NULL	10
+TURNER	7844	1500	7698	30
+ADAMS	7876	1100	7788	20
+JAMES	7900	950	7698	30
+FORD	7902	3000	7566	20
+MILLER	7934	1300	7782	10
+
+		emp b
+
+ename	empno	sal	mgr	deptno
+SMITH	7369	800	7902	20
+ALLEN	7499	1600	7698	30
+WARD	7521	1250	7698	30
+JONES	7566	2975	7839	20
+MARTIN	7654	1250	7698	30
+BLAKE	7698	2850	7839	30
+CLARK	7782	2450	7839	10
+SCOTT	7788	3000	7566	20
+KING	7839	5000	NULL	10
+TURNER	7844	1500	7698	30
+ADAMS	7876	1100	7788	20
+JAMES	7900	950	7698	30
+FORD	7902	3000	7566	20
+MILLER	7934	1300	7782	10
+
+--self join
+select a.ename,b.ename as mgrname from emp a,emp b
+where a.mgr=b.empno (13 ROWS)
+  
+ename	mgrname
+SMITH	FORD
+ALLEN	BLAKE
+WARD	BLAKE
+JONES	KING
+MARTIN	BLAKE
+BLAKE	KING
+CLARK	KING
+SCOTT	JONES
+TURNER	BLAKE
+ADAMS	SCOTT
+JAMES	BLAKE
+FORD	JONES
+MILLER	CLARK
+
+
+--left outer join 
+
+--display ename and corresponding mgrname
+select a.ename,b.ename as mgrname from emp a
+left outer join emp b on a.mgr=b.empno (14 rows)
+
+Mock test url path:
+-------------------
+
+http://sqlschool.com/RTCS_SQL2.html
+
+
+Kindly send mail id : gshekar816@gmail.com 
+
+		

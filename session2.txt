@@ -1,0 +1,280 @@
+Plsql datatypes / Fieldtypes:
+-----------------------------
+character datatypes(a to z and 0 to 9)
+----------------------------------------
+
+char(2000) - fixed length char - 1 byte - Ascii - Static memory allocation 
+- ANSI Syntax
+
+varchar(2000) - Variant length char - 1 byte - Ascii - Dynamic memory allocatin - ANSI syntax
+
+varchar2(4000) - Variant length char - 1 byte - Ascii - Dynamic memory allocation - Oracle syntax
+
+Nchar(40) - Fixed length char - 2 bytes - Unicode  - static memory allocation - Ansi syntax
+
+Nvarchar(40) - Variant length char - 2 bytes - Unicode - Dynamic memory allocation
+
+Number datatypes:(0 to 9)
+-------------------------
+number(10) => 10 digits
+number(10,2) => 9999999.99
+int - 4 bytes
+or
+INTEGER - 4 bytes
+
+Decimal point datatypes:
+------------------------
+float - 4 bytes (approx. 7 decimal digits)
+
+Datetime datatypes:
+-----------------
+date - 8 bytes -> 'dd-mm-yy' (default dateformat)
+datetime - 14 bytes -> 'dd-mm-yy hh:mi:ss AM/PM'
+
+
+Raw Datatypes: (rowid,GUID)
+-------------
+raw - 4 bytes
+long raw - 8 bytes
+
+
+LOB (Large objects datatypes)
+------------------------------
+BLOB - Binary Large objects -internal (image,mp4,video...)
+Bfile - Binary file - external (image,mp4,video...)
+CLOB - Character Large objects (document,data file,pdf...)
+
+--How to create a new table syntax?
+
+create table <tablename> (fieldname1 filedtype1,fieldname2 fieldtype2,fieldname3 fieldtype3,....);
+
+--example
+
+create table employee(ename varchar2(20),empno number(4),
+salary number(5));
+
+--How to insert the records?
+
+syntax:
+
+insert into <Tablename> values('value1',value2,value3);
+
+insert into employee values('aaa',1001,25000);
+insert into employee values('bbb',1002,35000);
+insert into employee values('ccc',1003,45000);
+insert into employee values('ddd',1004,50000);
+
+--How to select the records?
+syntax:(user follows)
+
+select <Fieldnames> 
+from <tablename> 
+where <condition>
+group by <fieldname>
+having <condition>
+
+System follows:
+
+from <tablename> 
+where <condition>
+group by <fieldname>
+having <condition>
+select <fieldnames>
+
+
+create table employee(ename varchar2(20),empno number(4),salary number(5));
+
+insert into employee values('aaa',101,25000);
+insert into employee values('bbb',102,35000);
+insert into employee values('ccc',103,45000);
+
+
+select ename,empno,salary from employee
+select ename,salary from employee
+select ename,empno from employee
+select * from employee
+select * from employee where empno=102
+select * from employee where ename='aaa'
+
+	student
+sname	sno	mark
+raj	101	200
+dilip	102	300
+dhinesh	103	400
+
+create table student(sname varchar2(20),sno number(3),mark number(3));
+
+insert into student values('raj',101,200);
+insert into student values('dilip',102,300);
+insert into  student values('dhinesh',103,400);
+
+select * from student;
+
+
+Insert command syntax:
+I Method (only one record all values)
+
+insert into <tablename> values('value1',value2,value3);
+
+II method (only one record partial values)
+
+insert into <tablename>(colname1,colname2) values('value1',value2);
+
+III method (Multiple records all values)
+
+insert into <tablename> values('&colname1',&colname2,&colname3);
+
+What is meant by Null?
+
+* Null is not equal to zero.
+
+* Null is not equal to empty.
+
+* Null is not equal to blankspace.
+
+* Null is not equal to nothing.
+
+* Null is an undefined symbols or undefined values.
+
+
+select * from  employee
+
+--How to insert partial values?
+
+insert into employee(ename,empno) values('Raj',104)
+
+insert into employee(ename,salary) values('shekar',15000)
+
+--How to insert multiple records?
+
+insert into employee values('&ename',&empno,&salary);
+
+
+select * from employee
+
+	Transaction
+
+cname	accno	ttype	tdate		amount
+siva	1001	db	12-07-19	5000
+uday	1002	cr	12-07-19	6000
+raj	1003	db	12-07-19	4500
+
+
+create table Transaction(cname varchar2(20),accno number(4),ttype char(2),tdate date,amount number(5));
+
+insert into Transaction values('siva',1001,'db','12-07-19',5000);
+insert into Transaction values('uday',1002,'cr','12-07-19',6000);
+insert into Transaction values('raj',1003,'db','12-07-19',4500);
+
+select * from Transaction;
+
+
+	customer
+cname	accno	amount
+xxx	1001	20000
+yyy	1002	30000
+zzz	1003	45000
+
+
+	dept
+deptno	dname	loc
+10	admin	hyd
+20	hr	hyd
+30	it	hyd
+40	per	hyd
+
+
+	product
+pname	pid	qty	amount
+ponds	p101	10	50
+lux	l101	20	35
+colgate	c101	25	56
+
+	hyd
+ename	empno	salary
+aaa	101	20000
+bbb	102	30000
+ccc	103	40000
+ddd	104	50000
+eee	105	50000
+
+	che
+name	empno	sal
+xxx	101	30000
+yyy	103	45000
+zzz	105	35000
+mmm	107	35000
+nnn	109	25000
+
+
+Sql sublanguage:
+---------------
+ddl - create,alter,truncate,drop,rename
+dml - insert,update,delete,merge
+dql - select
+tcl - commit,rollback,savepoint
+dcl - grant,revoke
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

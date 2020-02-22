@@ -1,0 +1,662 @@
+	SQL FUNCTION
+		-----------
+1.GROUP FUNCTION / AGGREGATE FUNCTION 
+A.SUM()	
+B.AVG()
+C.MAX()
+D.MIN()
+E.COUNT()
+F.OVER()
+
+Note : These functions are execute group of records and return only one value.
+
+What is difference between count(*) and count(colname)?
+
+count(*) - it count null values.
+
+count(Fieldname) - it does not count values.
+
+2.SINGLE ROW FUNCTION
+A.STRING FUNCTION 
+B.MATHEMATICAL FUNCTION
+C.DATETIME FUNCTION
+D.CONVERSION FUNCTION
+E.SPECIAL FUNCTION
+F.OLAP FUNCTION (ONLINE ANALYTICAL PROCESSING)
+	A.RANK()	B.DENSE_RANK()	C.ROW_NUMBER()
+
+Note : These functions are execute single row and return only one value.
+
+
+
+Group function / Aggregate Function:
+-----------------------------------
+
+select sum(sal) from emp;
+select avg(sal) from emp;
+select max(Sal) from emp;
+select min(sal) from emp;
+select count(sal) from emp;
+
+1.Display sum of salary for each dept wise
+
+Group By Clause:
+----------------
+* Group by clause is used to create group records based on one or more columns to calculate aggrgates such as sum,avg,max,min,count...
+
+* Group by clause only supports with in select statements.
+
+* is used to create summarized data from detail data.
+
+
+
+The syntax for the GROUP BY clause is:
+
+SELECT column1,aggregate_function (expression)  --last
+FROM table_NAME --first
+WHERE condition  --second 
+GROUP BY column1  --third
+
+--display sum of salary for each dept
+
+select deptno,sum(sal) from emp group by deptno;
+
+--display avg.salary for each dept
+
+select deptno,avg(sal) from emp group by deptno;
+
+--display max.salary for each dept
+
+select deptno,max(sal)  from emp group by deptno;
+
+--display min.salary for each dept
+
+select deptno,min(sal) as min from emp group by deptno;
+
+--display no.of employees working in each dept wise
+
+select deptno,count(*) as count from emp group by deptno;
+
+--display sum of salary for each job wise?
+
+
+
+rollup clause:
+-------------
+
+* is used to calculate aggregate with aggregate.
+
+* it supports only with in group by clause.
+
+--example
+
+select deptno,sum(sal) as sum,avg(sal) as avg,max(sal) as max,min(sal) as min,count(sal) as count from emp group by rollup(Deptno)
+/
+--display sum,avg,max,min,count for each job wise
+
+select nvl(job,'TOTAL') AS JOB ,sum(sal) as sum ,round(avg(sal),0) as avg,max(sal) as max,min(sal) as min,
+count(sal) as count from emp group by rollup(job)
+
+
+--display sum of salary for deptno 10 and 30?
+
+select deptno,sum(sal) as sum from emp where deptno in(10,30)
+ group by deptno
+
+--or
+select deptno,sum(sal) as sum from emp group by deptno having deptno in(10,30)
+
+
+--display avg.salary for deptno 10 and 20
+
+
+select deptno,avg(sal) from emp where deptno in(10,20) group by deptno;
+
+select deptno,avg(sal) from emp group by deptno having deptno in(10,30);
+
+--display sum of salary for deptno 10 and 30
+select deptno,sum(sal) as sum from emp where deptno in(10,30) group by deptno
+select deptno,sum(sal) as sum from emp group by deptno having deptno in(10,30)
+--display sum of salary for each dept and sum of salary above 10000
+select deptno,sum(sal) as sum from emp  group by deptno having sum(sal) >=10000
+--display no.of employees working in each dept and no.of employees >=5
+select deptno,count(*) as count from emp group by deptno having count(*) >=5
+
+
+--display no.of employees working in each dept & no.of employees greater than or equal to 5
+
+select deptno,count(*) from emp group by deptno having count(*)>=5
+/
+
+--display no.of employees joined in each year
+select to_char(hiredate,'yyyy') as year,count(hiredate) as count from emp group by to_char(hiredate,'yyyy')
+
+--display no.of employees joined in the year 1981 and 1982
+select to_char(hiredate,'yyyy') as year,count(hiredate) as count from emp 
+where  to_char(hiredate,'yyyy') in (1981,1982) group by to_char(hiredate,'yyyy')
+
+--display no.of employees joined the year 1981 and 1982 ,month wise
+select to_char(hiredate,'yyyy') as year,to_char(hiredate,'MONTH') as MONTH,count(hiredate) as count from emp 
+group by to_char(hiredate,'yyyy'),to_char(hiredate,'MONTH')
+having to_char(hiredate,'yyyy') in (1981,1982)
+
+
+HAVING CLAUSE:
+
+Having clause is used with the select clause to specify a search condition for a group or aggregate.
+
+
+
+What is the difference between where clause and having clause?
+
+1. 'Where' clause applies to the individual rows whereas 'Having' clause is used to test some condition on the group(usually aggregate methods) ...
+
+2.To filter data before group by use where clause.
+
+3.To filter data after group by use having clause.
+
+4.In condition,if there is no aggregate function then use where clause.
+
+5.In condition, if there is aggregate function,then use having clause.
+
+
+Order by Clause:
+---------------
+is used to  arrange records either ascending order or descending order.
+
+by default ascending order
+
+ASC 
+Specifies that the values in the specified column should be sorted in ascending order, from lowest value to highest value.
+
+DESC 
+Specifies that the values in the specified column should be sorted in descending order, from highest value to lowest value.
+
+
+syntax:
+
+SELECT column_name FROM table_name 
+[WHERE condition] 
+ORDER BY column_name [ASC, DESC]
+
+--List all emp details in deptno wise asc order.
+
+sql> select * from emp order by deptno asc;
+
+--List all emp details in deptno wise asc and sal wise desc order.
+
+sql> select * from emp order by deptno asc,sal desc;
+
+--list all emp details in deptno wise asc order
+select * from emp order by deptno asc
+
+select * from emp order by sal desc
+
+--list all emp details in deptno wise asc order and sal wise desc order
+select * from emp order by deptno asc,sal desc
+
+select * from emp order by 8 asc,6 desc
+
+select ename,empno,sal,deptno from emp order by 4 asc,3 desc;
+
+select to_char(hiredate,'yyyy') as year,to_char(hiredate,'MONTH') as MONTH,count(hiredate) as count
+from emp 
+group by to_char(hiredate,'yyyy'),to_char(hiredate,'MONTH')
+having to_char(hiredate,'yyyy') in (1981,1982) 
+order by year desc
+
+
+Group by clause - Group records based on one or more columns
+
+rollup clause - aggregate with aggregate
+
+where clause - To filter the data before group by 
+
+having clause - to filter the data after group by 
+
+order by clause - is used to arrange the data either asc order or desc order
+
+distinct keyword - is used to eliminate the duplicate values.
+
+Distinct keyword:
+-----------------
+
+* It is used to Eliminate or remove the duplicate values.
+
+syntax:
+
+select distinct (fieldname) from tablename;
+or
+select distinct fieldname from tablename;
+
+--How to know howmany dept are available?
+
+sql> select distinct(deptno) from emp;
+
+sql> select distinct(job) from emp;
+
+sql> select distinct(mgr) from emp;
+
+--Display no.of depts are available?
+
+sql> select count(distinct(deptno)) from emp;
+
+sql> select count(distinct(job)) from emp;
+
+sql> select count(distinct(mgr)) from emp;
+
+
+DIFFERENCE BETWEEN UNIQUE AND DISTINCT
+--------------------------------------
+
+1.UNIQUE: SELECT UNIQUE is old syntax supported by Oracle's flavor of SQL.
+
+1.DISTINCT: Use SELECT DISTINCT because this is standard SQL.
+
+2.UNIQUE: Mostly take part on DATA INSERTION.
+
+2.DISTINCT: Mostly concern on DATA RETRIEVAL.
+
+
+
+2.SINGLE ROW FUNCTION:
+---------------------
+A.STRING FUNCTION /character function 
+B.MATHEMATICAL FUNCTION /Numeric function 
+C.DATETIME FUNCTION
+D.CONVERSION FUNCTION
+E.SPECIAL FUNCTION
+F.OLAP FUNCTION (ONLINE ANALYTICAL PROCESSING) / ANALYTICAL FUNCTION 
+	A.RANK()	B.DENSE_RANK()	C.ROW_NUMBER()
+
+The character functions that return character values are:
+
+select ename,length(ename) as length,lower(ename) as lower,upper(ename) as upper ,initcap(ename)
+as initcap ,reverse(ename) as reverse ,substr(ename,1,3) as substring from emp
+
+select LOWER(‘SAMI’) from dual;
+
+select UPPER(‘Sami’) from dual;
+
+select INITCAP(‘mohammed sami’) from dual;
+-
+select length(‘mohammed sami’) from dual;
+
+select substr('mohammed sami',10,3) from dual;
+
+select instr('mohammed sami','a') from dual;
+
+select replace('ali mohd khan','mohd','mohammed') from dual;
+
+
+select translate('RAJ',
+'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+      'BCDEFGHIJKLMNOPQRSTUVWXYZAbcdefghijklmnopqrstuvwxyza') as encrypt from dual;
+
+Encrypt
+-----------
+txguib
+
+SOUNDEX
+
+This function is used to check pronounciation rather than exact characters. For example many people write names as “smith” or “smyth” or “smythe” but they are pronounced as smith only.
+
+Select ename from emp where soundex(ename)=soundex('smith');
+
+ENAME
+---------
+Smith
+Smyth
+Smythe
+
+
+ 
+RPAD
+
+Right pads a given string with a given character to n number of characters.
+
+Example
+
+The following query rights pad ename with '*'  until it becomes 10 characters.
+
+select rpad(ename,10,'*') from emp;
+
+Ename
+----------
+Smith*****
+John******
+Mohammed**
+Sami******
+
+LPAD
+
+Left pads a given string with a given character upto n number of characters.
+
+Example
+
+The following query left pads ename with '*'  until it becomes 10 characters.
+
+select lpad(ename,10,'*') from emp;
+
+Ename
+----------
+*****Smith
+******John
+**Mohammed
+******Sami
+
+LTRIM
+
+Trims blank spaces from a given string from left.
+
+Example
+
+The following query returns string “       Interface        “ left trimmed.
+
+select ltrim('       Interface       ') from dual;
+
+Ltrim
+--------------
+Interface 
+
+RTRIM
+
+Trims blank spaces from a given string from Right.
+
+Example
+
+The following query returns string “       Interface        “ right trimmed.
+
+select rtrim('       Interface       ') from dual;
+
+Rtrim
+------------
+   Interface 
+
+TRIM
+
+Trims a given character from left or right or both from a given string.
+
+Example
+
+The following query removes zero from left and right of a given string.
+
+Select trim(0 from '00003443500') from dual;
+
+Trim
+----------
+34435
+
+CONCAT
+
+Combines a given string with another string.
+
+Example
+
+The following Query combines ename with literal string “ is a “ and jobid.
+
+Select concat(concat(ename,' is a '),job) from emp;
+
+Concat
+----------------
+Smith is a clerk
+John is a Manager
+Sami is a G.Manager
+
+select ename,job from emp
+select concat(concat(ename,' is a '),job) from emp
+select ename ||' is a '||job from emp where ename='WARD'
+
+
+
+
+Numeric Functions
+
+ABS
+ACOS
+ASIN
+ATAN
+CEIL
+COS
+EXP
+FLOOR
+LOG
+MOD
+POWER
+ROUND (number)
+SIGN
+SIN
+SQRT
+TAN
+TRUNC (number)
+
+
+select abs(-4999) from dual
+select sin(30) from  dual
+select cos(30) from dual
+select tan(30) from dual
+select log(10,2) from dual
+select exp(100) from dual
+select sqrt(100) from dual
+select power(10,3) from dual
+select mod(100,3) from dual
+select sign(-49) from dual
+select sign(8484) from dual
+select sign(0) from dual
+select round(8888.8888,2) from dual
+select round(8888.8888,1) from dual
+select round(8888.8888,0) from dual
+select trunc(8888.8888,2) from dual
+select trunc(8888.8888,1) from dual
+select trunc(8888.8888,0) from dual
+select ceil(8888.8888) from dual
+select floor(8888.88888) from dual
+
+
+
+Datetime Functions
+
+ADD_MONTHS(SYDATE,100)
+CURRENT_DATE()
+LAST_DAY(SYSDATE)
+MONTHS_BETWEEN(DATE1,DATE2)
+NEXT_DAY(SYSDATE,'TUESDAY')
+ROUND (date)
+SYSDATE
+SYSTIMESTAMP
+CURRENT_TIMESTAMP
+
+SELECT SYSDATE FROM DUAL;
+SELECT CURRENT_DATE FROM DUAL;
+SELECT SYSTIMESTAMP FROM DUAL;
+SELECT CURRENT_TIMESTAMP FROM DUAL;
+SELECT SYSDATE FROM DUAL
+SELECT TO_CHAR(SYSDATE,'YYYY') FROM DUAL
+SELECT TO_CHAR(SYSDATE,'MONTH') FROM DUAL
+SELECT TO_CHAR(SYSDATE,'DAY') FROM DUAL
+SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL
+SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL
+SELECT EXTRACT(DAY FROM SYSDATE) FROM DUAL
+SELECT SYSDATE +100 FROM DUAL
+SELECT ADD_MONTHS(SYSDATE,100) FROM DUAL
+SELECT TO_CHAR(SYSDATE,'YYYY')+100 FROM DUAL
+SELECT LAST_DAY(SYSDATE) FROM DUAL
+SELECT SYSDATE - TO_CHAR(SYSDATE-1,'DD')  FROM DUAL
+SELECT TRUNC(TRUNC(MONTHS_BETWEEN(SYSDATE,'04-JAN-94'))/12) AS YEAR FROM DUAL
+SELECT TRUNC(MOD(MONTHS_BETWEEN(SYSDATE,'04-JAN-94'),12)) FROM DUAL
+
+
+select round(sysdate,'dd') from dual
+select round(sysdate,'mm') from dual
+select round(sysdate,'yyyy') from dual
+/
+
+
+--how to get year,months and days between 2 dates (FAQ)
+
+select ENAME,
+  hiredate,
+  trunc(months_between(sysdate,hiredate) / 12) as years,
+  MOD(trunc(months_between(sysdate,hiredate)),12)
+     as months,
+trunc(sysdate) - add_months(hiredate, 
+trunc(months_between(sysdate,hiredate))) as days
+from emp
+/
+
+
+
+--Particular dates
+
+select   trunc(months_between(sysdate,'29-10-91') / 12) as years,
+  MOD(trunc(months_between(sysdate,'29-10-91')),12)     as months,
+trunc(sysdate) - add_months('29-10-91',trunc(months_between(sysdate,'29-10-91'))) as days
+from dual
+/
+
+Conversion Functions:
+---------------------
+Conversion functions are used to convert a value from one datatype to another datatype.
+
+Number -> Varchar => to_char()
+ 
+Varchar -> Date => to_date()
+
+varchar -> number => to_number()
+
+Date ->timestamp => to_timestamp()
+
+TO_CHAR (character)
+TO_CHAR (datetime)
+TO_CHAR (number)
+TO_DATE(otherdatatype)
+TO_NUMBER(CHAR)
+TO_TIMESTAMP(DATE)
+
+
+
+SELECT TO_CHAR(SYSDATE,'DD-MM-YY') FROM DUAL
+SELECT TO_CHAR(SYSDATE,'DD-MONTH-YEAR') FROM DUAL
+SELECT TO_CHAR(SYSDATE,'DAY') FROM DUAL
+SELECT TO_CHAR(SYSDATE,'MONTH') FROM DUAL
+SELECT TO_CHAR(SYSDATE,'YYYY') FROM DUAL
+SELECT TO_DATE('30-OCTOBER-2018') FROM DUAL
+SELECT TO_NUMBER('1000') + TO_NUMBER('200') FROM DUAL
+
+
+SELECT TO_NUMBER('100') + TO_NUMBER('200') FROM DUAL
+/
+SELECT TO_CHAR(SYSDATE,'DAY') FROM DUAL;
+SELECT TO_CHAR(SYSDATE,'MM') FROM DUAL;
+SELECT TO_CHAR(SYSDATE,'YY') FROM DUAL;
+
+
+
+
+SPECIAL FUNCTION:
+------------------
+1.USER() -> it returns current user name
+2.NVL(EXP1,EXP2)  -> to convert null values into some other values
+3.DECODE() -> case expression
+4.VSIZE() --varrying array size
+5.COALESCE()
+6.NVL2(EXP1,EXP2,EXP3) - if exp1 is null then return exp3 else exp2.
+
+SQL>SELECT USER FROM DUAL;
+
+SQL> SHOW USER;
+
+SQL> SELECT ENAME,EMPNO,SAL,COMM,SAL+NVL(COMM,0) AS TOTAL FROM EMP;
+
+SQL> UPDATE EMP SET SAL=DECODE(DEPTNO,10,100,20,200,30,300);
+
+SQL> SELECT VSIZE('SQLSCHOOL') FROM DUAL;
+
+--How to check the total table size?
+
+SELECT SUM(BYTES) / 1024 FROM DBA_SEGMENTS WHERE SEGMENT_NAME='EMP'
+
+* coalesce(exp1,exp2,exp3......)
+
+* It returns first not null values or it picks first not null values.
+
+> select coalesce(100+null,
+250-null+1000,12*null,255,2345,9888) from dual
+
+select ename,empno,sal,comm,sal+nvl(comm,0) as total  from emp
+select ename,empno,sal,comm,sal+nvl2(comm,comm* 0.5,0) as total from emp
+
+select ename,empno,sal,comm,sal+nvl(comm,0) as total from emp
+--if exp1 is null then return exp2 else exp1
+
+select ename,empno,sal,comm,sal+nvl2(comm,comm,0) as total from emp
+--if exp1 is null then return exp3 else exp2
+
+Analytical function:
+-------------------
+OLAP FUNCTION : (ONLINE ANALYTICAL PROCESSING)
+----------------
+A.RANK()
+B.DENSE_RANK()
+C.ROW_NUMBER()
+
+
+--List all ename,empno,sal,Rank from emp table
+
+select ename,empno,sal,rank() over(order by sal desc)
+as rnk from emp;
+
+--List all ename,empno,sal,denserank from emp table
+select ename,empno,sal,dense_rank() over(order by sal desc) as dense from emp;
+
+
+--list all ename,empno,sal,rownumber from emp tabel
+select ename,empno,sal,row_number() over(order by sal desc) as rn from emp;
+
+
+
+
+
+
+Olap Function : (online analytical processing)
+---------------
+rank() -- it generates gap.
+dense_rank() -- it does not generates gap 
+row_number() - it generates sequential integer values
+
+rank		dense_rank	row_number()
+1		1			1
+2		2			2		2	2	2	2		3
+4		3			4	
+4		3			5
+4		3			6
+7		4			7	
+8		5			8
+9		6			9
+10		7			10
+10		7			11
+12		8			12		
+13		9
+14		10
+
+select  *,rank() over(order by sal desc) as rnk from emp;
+ 
+select *,dense_rank() over(order by sal desc) as dense from emp;
+
+select *,row_number() over(order by sal desc) as rn from emp;
+
+SELECT ENAME,EMPNO,HIREDATE,SAL,DENSE_RANK()
+OVER(ORDER BY SAL DESC,HIREDATE ASC) AS DENSE FROM
+EMP
+/
+
+--list all ename,empno,sal,rank from emp table
+select ename,empno,sal,
+rank() over(order by sal desc) as rnk,
+dense_rank()over(order by sal desc) as dense,
+row_number() over(order by sal desc) as rn from emp
+
+Partition by:
+-------------
+SELECT ENAME,EMPNO,DEPTNO,SAL,RANK() OVER(PARTITION BY deptno  ORDER BY SAL DESC) AS RNK FROM EMP
+

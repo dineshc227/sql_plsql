@@ -1,0 +1,298 @@
+Partitions:  
+-----------
+1.Large tables are divided into small table are called partition.
+
+2.Each part of the table is called partition.
+
+3.Partitions are particulary useful in DWH Application.
+
+4. Partitioning enables data management operations like Index Creation, Backup / Recovery at the partition level rather than on entire table. This will result in reducing time for these operations.
+
+5. Partitioning improves query performance.
+
+6. Partitioning can reduce maintenance operations.
+
+7. Partitioning can be implemented into Existing table without making changes in the existing application.
+
+
+Types of Partitions:
+
+Partitions are classified into the following types;
+
+1. Range Partition - Range()
+2. Hash Partition - Hash()
+
+
+1. Range Partition : It is the most common type of partitioning used that will map the data to partitions based on Range of values.
+
+This partition uses "VALUES LESS THAN" clause to specify the partition range.
+
+drop table student;
+
+CREATE TABLE student
+(rno NUMBER(3),sname VARCHAR2(12),age NUMBER(3))
+PARTITION BY RANGE (age)
+(PARTITION P1 VALUES LESS THAN(11),
+PARTITION P2 VALUES LESS THAN(21),
+PARTITION P3 VALUES LESS THAN(31));
+
+INSERT INTO STUDENT VALUES(101,'AAA',15);
+INSERT INTO STUDENT VALUES(102,'BBB',25);
+INSERT INTO STUDENT VALUES(103,'CCC',8);
+INSERT INTO STUDENT VALUES(104,'DDD',17);
+INSERT INTO STUDENT VALUES(105,'EEE',28);
+INSERT INTO STUDENT VALUES(106,'FFF',6);
+
+SQL> SELECT * FROM STUDENT;
+
+SQL> SELECT * FROM STUDENT PARTITION(P1);
+
+SQL> SELECT * FROM STUDENT PARTITION(P2);
+
+SQL> SELECT * FROM STUDENT PARTITION(P3);
+
+
+SELECT * FROM STUDENT PARTITION(P1) 
+UNION 
+SELECT * FROM STUDENT PARTITION(P2);
+
+TO ADD A NEW PARTITION
+
+ALTER TABLE student ADD PARTITION P4 VALUES LESS THAN(41);
+
+TO TRUNCATE A PARTITION
+
+ALTER TABLE student TRUNCATE PARTITION P2;
+
+TO DROP A PARTITION
+
+ALTER TABLE student DROP PARTITION P2;
+
+--how to know how many partitions are created?
+
+select partition_name from user_tab_partitions where table_name = 'STUDENT' 
+
+RETRIEVING THE DATA FROM PARTITIONS:
+
+SELECT * FROM STUDENT;
+
+SELECT * FROM STUDENT PARTITION (P1);
+union 
+SELECT * FROM STUDENT PARTITION (P3);
+
+NOTE: PARTITIONS CANT BE ADDED WITH VALUES OF ALREADY EXISTING RANGE.
+
+assignment:
+-----------
+
+Hash partition:
+---------------
+DROP TABLE STUDENT1;
+
+create table student1(sno number(3),sname varchar2(10),mark number(3))
+partition by hash(mark)  
+(partition p1,
+partition p2,
+partition p3)
+/
+
+insert into student1 values(101,'aaa',200);
+insert into student1 values(102,'bbb',300);
+insert into student1 values(103,'ccc',900);
+insert into student1 values(101,'aaa',400);
+insert into student1 values(102,'bbb',500);
+insert into student1 values(103,'ccc',800);
+
+select * from student1 partition(p1);
+select * from student1 partition(p3);
+
+
+--how to know how many partitions are created?
+
+select partition_name from user_tab_partitions where table_name = 'STUDENT' 
+
+--find the list of users created in database?
+
+select * from dba_users; (15 FIELDS)
+or
+select * from all_users;   (3 FIELDS)
+
+--how to transfer the data from one table into another table?
+
+insert into <tablename> select * from <existingtablename>;
+
+--how to create a new table from existing table?
+
+create table <newtablename> as select * from <oldtablename>;
+
+
+
+
+syntax:
+
+create table empnew1 (empno number(5),ename varchar2(10),salary number(5),deptno number(2))
+PARTITION BY RANGE (deptno)
+(PARTITION P1 VALUES LESS THAN(11),
+PARTITION P2 VALUES LESS THAN(21),
+PARTITION P3 VALUES LESS THAN(31));
+
+
+--how to transfer the data from one table into another table?
+
+insert into <tablename> select * from <existingtablename>;
+
+SQL> CREATE TABLE EMPNEW1 AS SELECT * FROM EMP;
+
+SQL> CREATE TABLE EMPNEW2 AS SELECT ENAME,EMPNO,SAL, FROM EMP;
+
+SQL> CREATE TABLE EMPNEW3 AS SELECT * FROM EMP WHERE DEPTNO=20;
+
+DML - INSERT,UPDATE,DELETE - ROLLBACK -> log file
+DDL - CREATE,ALTER,TRUN,DROP - FLASHBACK -> recyclebin
+
+RECYCLEBIN;
+
+Flashback Query. 
+---------------
+
+* Flashback Query allows the contents of a table to be queried with reference to a specific point in time, using the AS OF clause. Essentially it is the same as the DBMS_FLASHBACK functionality or Oracle 9i, but in a more convenient form.
+
+What Is the Recycle Bin?
+
+The recycle bin is actually a data dictionary table containing information about dropped objects. Dropped tables and any associated objects such as indexes, constraints, nested tables, and the likes are not removed and still occupy space. They continue to count against user space quotas, until specifically purged from the recycle bin or the unlikely situation where they must be purged by the database because of tablespace space constraints.
+
+Each user can be thought of as having his own recycle bin, because, unless a user has the SYSDBA privilege, the only objects that the user has access to in the recycle bin are those that the user owns. A user can view his objects in the recycle bin using the following statement:
+
+sql> SELECT * FROM RECYCLEBIN;
+
+sql> drop table emp;
+
+sql> select * from emp --invalid
+
+sql> SHOW RECYCLEBIN; --verification 
+
+sql> FLASHBACK TABLE emp TO BEFORE DROP;
+
+sql> SELECT * FROM emp;  --valid
+
+SELECT * FROM RECYCLEBIN;
+SELECT * FROM USER_RECYCLEBIN;
+
+--how to delete recyclebin?
+
+SQL> PURGE RECYCLEBIN;
+
+--HOW TO DELETE RECYCLEBIN TABLE?
+
+SQL> PURGE TABLE <TABLENAME>;
+
+--example2
+
+select * from recyclebin
+select * from emp
+drop table emp
+select * from emp
+flashback table emp to before drop
+select * from emp
+
+PURGE RECYCLEBIN;
+
+
+PURGE
+-----
+Use the PURGE statement to remove a table or index from your recycle bin and release all of the space associated with the object, or to remove the entire recycle bin, or to remove part of all of a dropped tablespace from the recycle bin.
+
+sql> PURGE TABLE student;
+
+Remove the Contents of Your Recycle Bin: Example To remove the entire contents of your recycle bin, issue the following statement:
+
+sql> PURGE RECYCLEBIN;
+
+SQLLOADER:
+
+* it is used to transfer the data from notepad file into oracle database tables.
+
+C:\>
+
+Text file -> table
+step 1: c:\>abc.txt
+
+10,sales,mumbai
+20,hr,hyd
+30,admin,hyd
+40,research,banglaore
+50,system,bangalore
+
+step 2: create a empty table in oracle db:
+
+create table dept1(deptno number(2),dname varchar2(20),loc varchar2(20));
+
+step 3:  c:\>abc.ctl
+
+load data
+infile abc.txt
+insert into table dept2
+fields terminated by ','(deptno,dname,loc)
+
+step 4: c:\>SQLLDR userid=sadan/123 control=abc.ctl
+
+
+Abstract datatype:
+-----------------
+
+* Abstract datatypes are data types that consists of one or more subtypes.
+
+* These are not constrained to the standard oracle datatypes.
+
+		address_ty
+	colname		datatype
+	street_no	number(3)
+	street_name 	varchar2(20)
+	city		varchar2(20)
+	state		varchar2(20)
+
+
+example:
+
+create or replace type address_ty as object
+(street_no number(3),street_name varchar2(20),
+city varchar2(20),state varchar2(20));
+
+
+sql> create table vend_master(vencode varchar2(15),
+venname varchar2(20),venadd address_ty,tel_no number(10));
+
+sql> desc vend_master
+
+insert into vend_master values('101','aaa',address_ty(101,'first st','srnagar','ts'),49949);
+insert into vend_master values('102','bbb',address_ty(102,'new st','kondapur','ts'),49499);
+
+
+sql> select column_name,data_type from user_tab_columns where table_name='emp'
+
+sql> select a.venadd.city form vend_mast a;
+
+sql> update vend_mast a set a.venadd.street_no=10 where venname='charu';
+
+
+sql> delete from vend_mast a where a.venadd.city='hyd';
+
+sql> drop type address_ty;
+sql> drop type address_ty force;
+
+ASSIGNMENT:
+
+allow_type
+hra number(5);
+ma number(5);
+ta number(5);
+da number(5);
+
+		emp1
+
+ename	empno	salary	allow (allow_type)
+
+
+
+
+

@@ -1,0 +1,520 @@
+
+/* Write a plsql program to select all emp details from employee table */
+declare
+e1 emp%rowtype;
+begin
+select * into e1 from emp where empno=&empno;
+dbms_output.put_line('ename ='||e1.ename);
+dbms_output.put_line('empno ='||e1.empno);
+dbms_output.put_line('salary='||e1.sal);
+dbms_output.put_line('deptno='||e1.deptno);
+dbms_output.put_line('mgr='||e1.mgr);
+end;
+/
+
+
+-
+CURSORS:
+--------
+* Cursor is a pointer to memory location which is called as context area which contains the information necessary for processing, including the number of rows processed by the statement, a pointer to the parsed representation of the statement, and the active set which is the set of rows returned by the query.
+
+* Cursor is a pointer to memory allocation, which contains group  of records or multiple records.
+
+Cursor contains two parts
+
+* 	Header
+* 	Body
+
+Header includes cursor name, any parameters and the type of data being loaded.
+
+Body includes the select statement.
+
+
+CURSOR TYPES:
+------------------
+*	Implicit (Select * from emp;)
+*	Explicit 
+*	Parameterized cursors (Nested loop)
+* 	REF  Cursor (PLSQL Package)
+
+Explicit CURSOR STAGES
+----------------------
+* Declare -> Memory allocation 
+* Open -> open the memory
+* Fetch -> Fetch records from memory (only one record)
+* Close -> close the memory
+
+syntax:
+
+1.cursor <cursorname> is select * from tablename;
+
+2.open <cursorname>;
+
+3.fetch <cursorname> into variablename;
+
+4.close <cursorname>;
+
+
+CURSOR ATTRIBUTES:
+-----------------
+*	%found => true/false - while loop
+*	%notfound => true/false - simple loop
+*	%rowcount=> return number of rows
+*	%isopen=> true/false
+
+CURSOR DECLERATION
+
+Syntax:
+     Cursor <cursor_name> is select statement;
+
+Ex:
+     Cursor c1 is select * from dept;
+
+--How to open the cursor?
+
+open c1;
+
+--How to close the cursor?
+close c1;
+
+CURSOR LOOPS
+
+*	Simple loop
+*	While loop
+*	For loop
+
+SIMPLE LOOP
+
+Syntax:
+	Loop
+       Fetch <cursor_name> into <record_variable>;
+	       Exit when <cursor_name> % notfound;
+                  <statements>;
+	End loop;
+
+Ex:
+
+/* Write a plsql program to select all emp details from employee table */
+declare
+e1 emp%rowtype;
+cursor c1 is select * from emp;
+begin
+open c1;
+loop
+fetch c1 into e1;
+exit when c1%notfound;
+dbms_output.put_line(e1.ename ||'   '||e1.empno||'   '||e1.sal);
+end loop;
+close c1;
+end;
+/
+
+/* write a plsql program to select all dept details from dept table */
+declare
+d1 dept%rowtype;
+cursor c1 is select * from dept;
+begin
+open c1;
+loop
+fetch c1 into d1;
+exit when c1%notfound;
+dbms_output.put_line(d1.deptno||'    '||d1.dname||'   '||d1.loc);
+end loop;
+close c1;
+end;
+/
+
+/* Write a plsql program to select all salgrade details from salgrade table */
+declare
+e1 salgrade%rowtype;
+cursor c1 is select * from salgrade;
+begin
+open c1;
+loop
+fetch c1 into e1;
+exit when c1%notfound;
+dbms_output.put_line(e1.grade||'   '||e1.losal||'   '||e1.hisal);
+end loop;
+close c1;
+end;
+/
+
+
+
+ /* Write a plsql program to select all ename and dname from corresponding table */
+declare
+e1 emp.ename%type;
+d1 dept.dname%type;
+cursor c1 is select emp.ename,dept.dname from emp inner join dept on emp.deptno=dept.deptno;
+begin
+open c1;
+loop
+fetch c1 into e1,d1;
+exit when c1%notfound;
+dbms_output.put_line(e1||'   '||d1);
+end loop;
+close c1;
+end;
+
+
+
+
+	student
+sname	sno	s1	s2	s3
+aaa	101	90	89	78
+bbb	102	67	89	67
+ccc	103	20	40	90
+ddd	104	56	45	90
+eee	105	25	35	10
+
+
+
+	result
+sno	total	average		result
+					
+
+
+
+
+drop table student;
+drop table result;
+create table student(sname varchar2(20),sno number(3),s1 number(3),s2 number(3),s3 number(3));
+
+insert into student values('aaa',101,90,89,78);
+insert into student values('bbb',102,67,89,67);
+insert into student values('ccc',103,20,40,90);
+insert into student values('ddd',104,56,45,90);
+insert into student values('eee',105,25,35,10);
+
+create table result(sno number(3),total number(3),average number(3),result varchar2(10));
+
+declare 
+std student%rowtype;
+res result%rowtype;
+cursor c1 is select * from student;
+begin
+open c1;
+loop
+fetch c1 into std;
+exit when c1%notfound;
+res.total:=std.s1+std.s2+std.s3;
+res.average:=res.total/3;
+if (std.s1>=40 and std.s2>=40 and std.s3>=40) then
+res.result:='pass';
+else
+res.result:='fail';
+end if;
+insert into result values(std.sno,res.total,res.average,res.result);
+end loop;
+close c1;
+end;
+/
+
+example2
+
+sname	maxmark
+aaa	90
+bbb	89
+ccc	90
+ddd	78
+eee	67
+
+
+declare
+name varchar2(10);
+n number;
+s11 number;
+s12 number;
+s13 number;
+maxmark number;
+cursor c1 is select sname,sno,s1,s2,s3 from student;
+begin
+open c1;
+loop
+fetch c1 into name,n,s11,s12,s13;
+if (s11>s12 and s11>s13) then
+maxmark:=s11;
+elsif s12>s13 then
+maxmark:=s12;
+else
+maxmark:=s13;
+end if;
+exit when c1%notfound;
+dbms_output.put_line(name||'    '||maxmark);
+end loop;
+close c1;
+end;
+/
+
+assignment1:
+
+	student
+sname	maxmark		minmark	 	averagemark
+
+
+
+assignment2
+		employee
+
+ename	empno	basic	hra	ta	ma lic	
+aaa	1001	5000	250	100	150 2000  
+bbb	1002	6700	350	200	150 3500  
+ccc	1003	4000	300	200	100 4500
+
+		salary
+
+ename	empno	basic	grosspay	netpay
+
+
+emp employee%rowtype;
+sal salary%rowtype;
+
+sal.grosspay=basic+hra+ta+ma
+sal.netpay=grosspay-(lic)
+
+	bank_master
+
+accno	balance
+1001	10000
+1002	20000
+1003	27500
+1004	42500
+1005	53500
+
+
+	bank_transaction
+cname	accno	ttype	amount
+raj	1003	db	2500
+kumar	1005	cr	3500
+
+if ttype='cr' then 
+update bank_master set balance=balance+amount where accno=&accno;
+else
+update bank_master set balance=balance-amount where accno=&accno;
+end if;
+
+WHILE LOOP
+
+Syntax:
+	fetch <cursorname> into <variablename>;
+
+	While <cursor_name> % found loop
+	       Fetch <cursor_name> into <record_variable>;
+                  <statements>;
+	End loop;
+
+Ex:
+DECLARE
+     cursor c1 is select * from student;
+     stud student%rowtype;
+BEGIN
+     open c1;
+     fetch c1 into stud;--start the loop
+     while c1%found 
+     loop
+         
+          dbms_output.put_line('Name = ' || stud.sname);
+           fetch c1 into stud;--continue the loop
+     end loop;
+     close c1;
+END;
+
+Output:
+Name = saketh
+Name = srinu
+Name = satish
+Name = sudha
+
+--while loop example2
+
+/* Write a plsql program to select all dept details
+from dept table */
+declare
+d dept%rowtype;
+cursor c1 is select * from dept;
+begin
+open c1;
+fetch c1 into d; --first record
+while c1%found
+loop
+dbms_output.put_line(d.deptno||'   '||d.dname||'  '||d.loc);
+fetch c1 into d;  --Next record
+end loop;
+close c1;
+end;
+/
+
+
+
+
+
+FOR LOOP CURSOR:(FAQ)
+----------------
+Using Cursor For Loop:
+---------------------
+The cursor for Loop can be used to process multiple records. There are two benefits with cursor for Loop 
+
+1. It implicitly declares a %ROWTYPE variable, also uses it as LOOP index 
+
+2. Cursor For Loop itself opens a cursor, read records then closes the cursor automatically. Hence OPEN, FETCH and CLOSE statements are not necessary in it. 
+
+
+
+
+
+Syntax:
+	for <record_variable> in <cursor_name> loop
+                  <statements>;
+	End loop;
+
+Ex:
+DECLARE
+     cursor c is select * from student;
+ 
+BEGIN
+     for i in c loop
+dbms_output.put_line(i.sname||'   '||i.sno||'   '||i.s1);
+     end loop;
+END;
+/
+Output:
+Name = saketh
+Name = srinu
+Name = satish
+Name = sudha
+
+
+/* Write a plsql program to select all dept details from dept table */
+declare
+cursor c1 is select * from salgrade;
+begin
+for d in c1
+loop
+dbms_output.put_line(d.grade||'   '||d.losal||'  '||d.hisal);
+end loop;
+end;
+/
+
+
+/* PROGRAM USING CURSORS  - COLUMN TYPE VARIABLES */
+DECLARE
+  ENO EMP.EMPNO%TYPE;
+  ENAM EMP.ENAME%TYPE;
+  JB EMP.JOB%TYPE;
+  SL EMP.SAL%TYPE;
+  CURSOR C1 IS SELECT EMPNO,ENAME,JOB,SAL FROM EMP WHERE UPPER(JOB)=UPPER('&JB');
+BEGIN
+  OPEN C1;
+  LOOP
+    FETCH C1 INTO ENO,ENAM,JB,SL;
+    EXIT WHEN C1%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('EMPLOYEE NUMBER IS '||ENO);
+    DBMS_OUTPUT.PUT_LINE('EMPLOYEE NAME IS '||ENAM);
+    DBMS_OUTPUT.PUT_LINE('DESIGNATION IS '||JB);
+    DBMS_OUTPUT.PUT_LINE('EMPLOYEE SALARY IS '||SL);
+    DBMS_OUTPUT.PUT_LINE('============================');
+  END LOOP;
+  CLOSE C1;
+END;
+/
+
+
+/* PROGRAM USING CURSORS  - ROW TYPE VARIABLES */
+DECLARE
+  X EMP%ROWTYPE;
+  INCR EMP.SAL%TYPE;
+  NET EMP.SAL%TYPE;
+  CURSOR C1 IS SELECT * FROM EMP;
+BEGIN
+  OPEN C1;
+  DBMS_OUTPUT.PUT_LINE('=================================');
+  LOOP
+    FETCH C1 INTO X;
+    EXIT WHEN C1%NOTFOUND;
+    IF X.JOB='MANAGER' THEN
+      INCR:=400;
+    ELSIF X.JOB='CLERK' THEN
+      INCR:=300;
+    ELSIF X.JOB='SALESMAN' THEN
+      INCR:=200;
+    ELSE
+      INCR:=500;
+    END IF;
+    NET:=X.SAL+INCR;
+    UPDATE EMP SET SAL=NET WHERE EMPNO=X.EMPNO;
+    DBMS_OUTPUT.PUT_LINE(X.EMPNO||'  '||X.ENAME||' '||X.JOB||' '||X.SAL||' '||INCR||' '||NET);
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('=================================');
+  CLOSE C1;
+END;
+/
+Using Cursor For Loop:
+---------------------
+The cursor for Loop can be used to process multiple records. There are two benefits with cursor for Loop 
+
+1. It implicitly declares a %ROWTYPE variable, also uses it as LOOP index 
+
+2. Cursor For Loop itself opens a cursor, read records then closes the cursor automatically. Hence OPEN, FETCH and CLOSE statements are not necessary in it. 
+
+
+
+cursor for loop:
+
+declare
+cursor c1 is select ename,empno,sal from emp;
+begin
+for i in c1
+loop
+dbms_output.put_line(i.ename||'   '||i.empno||'   '||i.sal);
+end loop;
+end;
+/
+
+/* USAGE FOR LOOP WITH CURSOR PROGRAMS */
+DECLARE
+  INCR EMP.SAL%TYPE;
+  NET EMP.SAL%TYPE;
+  CURSOR C1 IS SELECT * FROM EMP;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('=================================');
+  FOR X IN C1    /* X IS ASSUNMED AS A ROWTYPE VARIABLE */
+  LOOP
+    IF X.JOB='MANAGER' THEN
+***      INCR:=400;
+    ELSIF X.JOB='CLERK' THEN
+      INCR:=300;
+    ELSIF X.JOB='SALESMAN' THEN
+      INCR:=200;
+    ELSE
+      INCR:=500;
+    END IF;
+    NET:=X.SAL+INCR;
+    UPDATE EMP SET SAL=NET WHERE EMPNO=X.EMPNO;
+    DBMS_OUTPUT.PUT_LINE(X.EMPNO||'  '||X.ENAME||' '||X.JOB||' '||X.SAL||' '||INCR||' '||NET);
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('=================================');
+END;
+/
+
+
+--write a program to update the salgrade values
+
+DECLARE
+CURSOR C1 IS SELECT * FROM SALGRADE;
+LOWSAL NUMBER;
+HIGHSAL NUMBER;
+BEGIN
+FOR I IN C1
+LOOP
+LOWSAL:=I.LOSAL+200;
+HIGHSAL:=I.HISAL+300;
+UPDATE SALGRADE SET LOSAL=LOWSAL,HISAL=HIGHSAL WHERE GRADE=I.GRADE;
+DBMS_OUTPUT.PUT_LINE(I.GRADE||'   '||LOWSAL||'   '||HIGHSAL);
+END LOOP;
+END;
+
+
+
+
+
+

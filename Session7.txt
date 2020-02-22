@@ -1,0 +1,157 @@
+Set operators:
+-------------
+* are used to reterive the data from multiple tables or more than one tables or particular tables.
+
+* There are 4 types
+
+a.union
+
+b.union all
+
+c.intersect
+
+d.minus
+
+
+	A				B
+{101,102,103,104,105} union {101,103,105,107,109}
+
+=>{101,102,103,104,105,107,109}
+
+
+	A				B
+{101,102,103,104,105} union all {101,103,105,107,109}
+
+=>{101,102,103,104,105,101,103,105,107,109}
+
+	A				B
+{101,102,103,104,105} Intersect {101,103,105,107,109}
+
+=>{101,103,105}
+
+	A				B
+{101,102,103,104,105} Minus {101,103,105,107,109}
+
+A-B =>{102,104}
+B-A =>{107,109}
+
+	hyd
+ename	empno	sal
+aaa	101	20000
+bbb	102	30000
+ccc	103	40000
+ddd	104	25000
+eee	105	15000
+	che
+name	empno	salary
+xxx	101	25000
+yyy	103	45000
+zzz	105	35000
+mmm	107	23000
+nnn	109	21000
+
+drop table hyd;
+drop table che;
+
+create table hyd(ename varchar2(20),empno number(3),sal number(5));
+
+insert into hyd values('aaa',101,20000);
+insert into hyd values('bbb',102,30000);
+insert into hyd values('ccc',103,40000);
+insert into hyd values('ddd',104,25000);
+insert into hyd values('eee',105,35000);
+
+create table che(name varchar2(20),empno number(3),sal number(5));
+
+insert into che values('xxx',101,35000);
+insert into che values('yyy',103,45000);
+insert into che values('zzz',105,35000);
+insert into che values('mmm',107,35909);
+insert into che values('raj',109,45000);
+
+select * from hyd;
+select * from che;
+
+
+select empno from hyd union select empno from che
+select empno from hyd union all select empno from che
+select empno from hyd intersect select empno from che
+select empno from hyd minus select empno from che
+select empno from che minus select empno from hyd
+
+--How to find the max.salary from 2 tables? (FAQ)
+
+select max(salary)  from 
+(select max(sal) as salary from hyd
+union 
+select max(sal) as salary from che)
+
+--How to find the 2nd highest salary? (FAQ)
+select * from hyd where sal =(select max(sal) from hyd where sal <
+(select max(sal) from hyd))
+
+Sql function:
+------------
+1.Group function /Aggregate function
+2.Single row function 
+
+Group function/Aggregate function  :
+----------------------------------
+a.sum()
+b.avg()
+c.max()
+d.min()
+e.count()
+f.over() -> Analytical function
+Note: It executes group of records and return only one value.
+
+Single row function:
+-------------------
+a.string function 
+b.mathematical function 
+c.datetime function
+d.conversion function 
+e.special function
+f.Analytical function 
+	1.rank()	2.dense_rank()	c.row_number()
+
+Note: It execute only one record and return only one value.
+
+--Example for aggregate function 
+
+select sum(sal) from emp
+select avg(sal) from emp
+select max(sal) from emp
+select min(sal) from emp
+select count(comm) from emp --it does not count null values
+select count(*) from emp -- it count null values
+
+
+Group by Clause or Group by Statement:
+--------------------------------------
+* is used to create group records based on one or more columns to calculate aggregates such as sum,avg,max,min,count....
+
+* is used to create summarized data from detail data.
+
+* it supports only with in select statement.
+
+syntax:
+
+select <fieldname>,aggregate_functions()  --last
+from <Tablename> --execute 1
+where <condition> --execute 2
+group by <fieldname>; --execute 3
+
+
+--display sum of salary for each dept
+select deptno,sum(sal) from emp group by deptno
+--display avg.salary for each dept
+select deptno,round(avg(sal)) from emp group by deptno
+--display max.salary for each dept
+select deptno,max(sal) from emp group by deptno
+--display min.salary for each dept
+select deptno,min(sal) from emp group by deptno
+--display no.of employees working in each dept
+select deptno,count(sal) from emp group by deptno
+
+

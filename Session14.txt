@@ -1,0 +1,324 @@
+SEQUENCES
+----------
+* Sequence is a database object, which is stored in database server and it is used to generate the sequence of numbers.
+
+* it automatically generates primary key or unique key values.
+
+* it can be either asc /desc order.
+
+
+Syntax:
+
+CREATE SEQUENCE seq_name
+[INCREMENT BY 1 / n]
+[START WITH n]
+[NOMINVALUE / MINVALUE n]
+[NOMAXVALUE / MAXVALUE n]
+[NOCYCLE / CYCLE]
+[NOCACHE / CACHE 10];
+
+sequence object pseudo column
+-------------------------
+
+currval - it returns current sequence integer values.
+
+nextval - it returns next sequence integer values.
+
+how to access the methods?
+
+sequencename.pseduocolname
+seq1.nextval
+seq1.currval
+
+--example
+
+CREATE SEQUENCE SEQ1
+INCREMENT BY 1
+START WITH 100
+MINVALUE 100
+MAXVALUE 200
+CYCLE
+CACHE 10;
+/
+
+--EXAMPLE
+
+CREATE TABLE EMP1(ENAME VARCHAR2(20),EMPNO NUMBER(4),SALARY NUMBER(5));
+
+INSERT INTO EMP1 VALUES('XXX',SEQ1.NEXTVAL,35000);
+INSERT INTO EMP1 VALUES('YYY',SEQ1.NEXTVAL,45000);
+INSERT INTO EMP1 VALUES('ZZZ',SEQ1.NEXTVAL,45000);
+
+SELECT * FROM EMP1;
+
+
+
+
+When a sequence is created with no user specified values then sequence will start generating the numbers from 1 and ends with 10 power 27.
+
+INCREMENT BY 1 / n : By default a sequence is incremented by 1.
+
+ When this clause is used it will allow a user to specify the increment either with +ve or -ve value. 
+
+Any interval can be specified for increment. If +ve value is specified it generates the sequence of numbers in Ascending order. If -ve values is specified it generates the sequence of numbers in Descending order.
+
+START WITH n : This clause is used to specify the start value of a sequence.
+It gets executed only for once. 
+Start value should be >=minvalue and <=maxvalue.
+
+NOMINVALUE : It is a default minvalue which gets set for a sequence.
+If a sequence is in ascending order min value is 1.
+If a sequence is in descending order min value is 10 power -26
+NOMAXVALUE : It is a default maxvalue which gets set for a sequence.
+If a sequence is in ascending order max value is 10 power 27
+If a sequence is in descending order max value is -1
+MINVALUE n : It is used to specify min value of a sequence.
+MAXVALUE n : It is used to specify max value of a sequence.
+NOCYCLE : It is a default option which is set for a sequence and that sequence will be not reusable.
+CYCLE : It is used to make a sequence repeat with respect to gerarating the numbers between min value to max value and vice versa.
+CACHE n : It will support to create a buffer to store n number of values
+To interact with the sequence to generate the numbers, 2 pseudo columns plays and important role.
+NEXTVAL ---- generates next value of a sequence
+CURRVAL ---- displays current value of a sequence
+NEXTVAL & CURRVAL can be used;
+1. at SELECT statement
+2. at INSERT,UPDATE statement
+3. at Outer most queries
+Restriction on NEXTVAL & CURRVAL;
+1. Cant be used at DELETE command
+2. Cant be used at Inner queries
+3. Cant be used with DISTINCT operator
+4. Cant be used at Group By Clause
+ALTERING A SEQUENCE:
+	Sequence which is created can be altered w.r.to minvalue, maxvalue, increment by value... etc. It does not support to change the START value.
+Syntax:
+
+ALTER SEQUENCE sequence_name
+INCREMENT BY n
+MINVALUE n
+MAXVALUE n ......;
+
+EX:
+ALTER SEQUENCE SEQ1
+INCREMENT BY 2
+MINVALUE 150
+MAXVALUE 300;
+/
+
+SQL> DESC USER_SEQUENCES;
+
+SQL> 
+
+DROPING A SEQUENCE:
+A sequence which is created can be dropped using DROP SEQUENCE command.
+DROP SEQUENCE seq_name;
+DROP SEQUENCE sn1;
+
+
+VIEWING THE SEQUENCES INFORMATION:
+USER_SEQUENCES : This predefined table provides the detail information about the sequences which are created in a database, which includes Sequence name,start value, min value, maxvalue,........ etc.
+SQL> SELECT SEQUENCE_NAME,MIN_VALUE,MAX_VALUE,INCREMENT_BY,LAST_NUMBER FROM USER_SEQUENCES;
+
+
+
+CREATING SYNONYMS:
+------------------
+* Synonym is a permanent alias name for single BASE table or view.
+
+	Synonym is a database object, which can be created for table or view, where from they can be referred with that name.
+
+* it supports DML And DQL operations.
+
+Note : if any changes in the synonym automatically reflected into table and viceversa.
+
+
+	Synonym is a dependent object whereas table is independent object, which means if a table is dropped then synonym stops its working. If a table is recalled back then synonym will start its working.
+
+organization_master -> om
+order_master_sales -> oms
+
+
+
+
+	Synonym is like creating a permanent alias name for a table or view.
+It provides its advantage when object has a frequent usage with different 
+
+* it supports only DML & DQL.
+
+	Synonym is classified into 2 types;
+
+1. Private Synonym : It is created being in a user, which provides its working within that user, 
+hence it is named as private synonym.
+
+2. Public Synonym : This synonym is created from a user, which has got DBA privileges. When public synonym is created and if the same object gets accessed from other user, table name should not be used as qualifier.
+
+Organization_master OM
+
+SYNTAX:
+
+
+CREATE [PUBLIC] SYNONYM synonyn_name FOR objectname;
+
+--example
+
+SQL> CREATE SYNONYM SG FOR SALGRADE;
+
+SQL> INSERT INTO SG VALUES(6,3000,4000);
+SEL
+SQL> INSERT INTO SG  VALUES(7,4000,5000);
+
+SQL> SELECT * FROM SG;
+
+SQL> UPDATE SG SET GRADE=5 WHERE GRADE=3;
+
+SQL> DELETE FROM SG WHERE GRADE=5;
+
+PUBLIC SYNONYMS:
+-----------------
+SQL> CREATE PUBLIC SYNONYM CS FOR CUSTOMER;
+
+SQL> GRANT SELECT ON CS TO ABDUL;
+
+SQL>CONNECT ADBUL/123;
+
+ABDUL> SELECT * FROM CS; --VALID
+
+ABDUL> CONNECT ANAND/123;
+
+ANAND> REVOKE SELECT ON CS FROM ABDUL;
+
+ANAND> CONNECT ABDUL/123;
+
+ABDUL> SELECT * FROM CS; --INVALID
+
+
+SYNONYMS INFORMATION : USER_SYNONYMS
+
+SQL> select * from  USER_SYNONYMS;
+
+
+
+VIEWING SYNONYM INFORMATION:
+TAB & CAT : These predefined tables will store only about private synonym names with their type of object.
+
+USER_SYNONYMS : This predefined table will provide the detail information about the user created private synonyms.
+SELECT SYNONYM_NAME,TABLE_NAME FROM USER_SYNONYMS;
+
+ALL_SYNONYMS : This predefined table will provide the detail information about the private & public synonyms.
+SELECT OWNER,TABLE_OWNER,SYNONYM_NAME,TABLE_NAME FROM ALL_SYNONYMS WHERE TABLE_NAME='SALGRADE';
+DROPING A SYNONYM:
+DROP [PUBLIC] SYNONYM synonym_name;
+PUBLIC synonyms can be dropped from a user, which has got DBA privileges.
+
+	Private synonyms created in one user can be provided with privileges to get access from other users, where synonym name should also be preceeded with user name as qualifier.
+
+
+--HOW TO DROP SYNONYM?
+
+DROP SYNONYM SG;
+DROP PUBLIC SYNONYM LIB1;
+
+Database objects:
+-----------------
+1.Table
+2.View
+3.Materialized view
+4.Sequences
+5.synonyms
+6.pubic synonyms
+7.index
+
+
+		Index:
+		-------
+select * from emp (Scanning)
+------------------------------
+1.Table scan  - sequential order - 
+small amount of data -linear searching - by default
+
+2.Index scan - random order -- large amout of data  --binary tree searching - manually creating
+
+What is an Index? 
+
+* Index is used to search for required rows quickly. 
+
+*  Index occupies extra space. Index is stored separately from table. 
+
+* To speed up searching for a particular value thereby improving performance of query. 
+
+* To enforce uniqueness 
+
+SYNTAX:
+
+create index <indexname> on <tablename>(colname)
+
+How does Index work?
+
+* Indexing is a way of sorting a number of records on multiple fields.
+
+*  Creating an index on a field in a table creates another data structure(binary Tree) which holds the field value, and a pointer to the record it relates to. 
+
+* This index structure is then sorted, allowing Binary Searches to be performed on it.
+
+
+
+ex:
+create index i1 on emp(empno);
+
+
+SIMPLE INDEX :
+----------------
+
+index created on single column
+
+CREATE INDEX idx_cname ON Customers(cname);
+
+COMPOSITE INDEX :
+------------------
+
+Index created on muliple columns
+
+CREATE INDEX i3 ON Orders(cnum,snum);
+
+Function based index:
+--------------------
+CREATE INDEX i5 on emp(UPPER(Ename));
+ 
+
+Unique index :
+-------------
+* This index created on column level.
+
+* Those column contain unique data and no duplicate values.
+
+* This index column contains unique data.
+
+Note : oracle automatically create index for 2 constraints 
+a.primary key
+b.unique key
+
+	emp1
+ename	empno(pk)	salary
+aaa	1001		25000
+bbb	1002		30000
+ccc	1003		50000
+
+
+
+
+sql> create unique index i4 on emp(mgr);
+
+SQL> DESC USER_INDEXES
+
+SQL> SELECT INDEX_NAME,TABLE_NAME FROM USER_INDEXES;
+
+SQL> DROP INDEX I1;
+
+DROP INDEX <indexname>;
+
+rebuild index:
+-------------
+
+sql> ALTER INDEX I1 REBUILD;
+/
+

@@ -1,0 +1,182 @@
+Types of constraints: 
+--------------------
+1.Column level - New table - create command
+
+2.Table level - existing table - alter command
+
+CREATING CONSTRAINTS ON EXISTING TABLE:
+---------------------------------------
+	Constraints can be created on the columns of existing table, using ALTER TABLE command.
+
+SYNTAX:
+
+ALTER TABLE <TABLENAME> ADD CONSTRAINT <CONSTRAINT_NAME> <CONSTRAINT_TYPE>;
+
+
+
+VIEWING THE CONSTRAINTS INFORMATION:
+------------------------------------
+SYSTEM TABLE : USER_CONSTRAINTS:
+
+select * from user_constraints where table_name='EMP1'
+SELECT * FROM EMP1
+ALTER TABLE EMP1 ADD CONSTRAINT EMP1_C1_SALARY CHECK(SALARY BETWEEN 20000 AND 50000)
+ALTER TABLE EMP1 ADD CONSTRAINT EMP1_C2_EMPNO PRIMARY KEY(EMPNO)
+
+
+select * from emp
+select * from  user_constraints where table_name='EMP'
+alter table emp add constraint emp_c2_salary check(sal between 800 and 10000)
+alter table emp add constraint emp_c3_empno primary key(empno)
+alter table emp add constraint emp_c4_mgr foreign key(mgr) references emp(empno)
+
+FOREIGN KEY CONSTRAINTS:
+------------------------
+CREATE TABLE REGIONS(
+REGIONID NUMBER(4) CONSTRAINT REGSIONS_C1 PRIMARY KEY,
+REGIONNAME VARCHAR2(10));
+
+CREATE TABLE COUNTRY(
+COUNTRYID NUMBER(4) CONSTRAINT COUNTRY_C1 PRIMARY KEY,
+COUNTRYNAME VARCHAR(20),
+REGIONID NUMBER(4));
+
+ALTER TABLE COUNTRY ADD CONSTRAINT COUNTRY_REGIONID 
+FOREIGN KEY(REGIONID) REFERENCES REGIONS(REGIONID)
+
+--How to disable or enable the constraints?
+syntax:
+
+alter table <Tablename> enable/disable constraint <constraint_name>;
+
+
+example:
+
+alter table emp1 disable constraint c3_deptno;
+
+--How to drop the constraints?
+
+syntax:
+
+alter table <Tablename> drop constraint <constraint_name>;
+
+ex:
+
+alter table emp1 drop constraint c3_Deptno;
+
+
+Self Referenital key: (faq)
+--------------------
+	emp4
+
+ename	empno(PK)mgr(FK)salary
+xxx	1001	null	30000
+yyy	1002	1001	30000
+zzz	1003	1002	45000
+mmm	1004	1002	30000
+nnn	1005	1001	30000
+
+DROP TABLE EMP4;
+
+create table emp4(
+ename varchar2(10),
+empno number(4), constraint c4_empno primary key(empno),
+mgr number(4) , constraint c5_mgr foreign key(mgr) references emp4(empno),
+salary number(5));
+
+or
+
+create table emp4(ename varchar2(20),empno number(4),mgr number(4),
+salary number(5));
+
+alter table emp4 add constraint emp4_c1_empno primary key(empno);
+
+alter table emp4 add constraint emp4_c2_mgr foreign key(mgr)
+references emp4(empno);
+
+--Self Referential key example2
+
+SELECT * FROM USER_CONSTRAINTS WHERE TABLE_NAME='EMP'
+ALTER TABLE EMP ADD CONSTRAINT EMP_C1_EMPNO PRIMARY KEY(EMPNO)
+ALTER TABLE EMP ADD CONSTRAINT EMP_C2_MGR FOREIGN KEY(MGR) REFERENCES EMP(EMPNO)
+
+
+
+Note:
+
+* Foreign key column name need not match with primary key column name or unique column name. But the data type should be match.
+
+* To establish relationship it is mandatory that the parent table should have primary key constraint or at least unique constraints.
+
+Note: we can not delete to the row from the parent table in the corresponding value existing child table.
+	dept
+10	admin	che
+25	hr	hyd
+30	it	hyd
+
+	emp
+aaa	101	10	10000
+bbb	102	25	25000
+ccc	103	25	45000
+
+*Using on delete cascade: 
+-------------------------
+
+When using on delete cascade. We can delete the rows from the parent table and the corresponding child table rows deleted automatically.
+
+Create the parent table:
+	Create table school1(sno number(3),                        Sname varchar2(10),Marks number(3),primary key(sno));
+
+Insert Row parent table:
+	Insert into school1 values(101,'Arun',90);
+        Insert into school1 values(102,'Kiran',92);
+	Insert into school1 values(103,'Amit',45);
+
+Creating the child table:
+Create table library1(sno number(3), CONSTRAINT LIBRARY1_SNO FOREIGN KEY(sno) REFERENCES school1(sno)on delete cascade,Book_name varchar2(10));
+
+
+Insert Rows child table:
+	Insert into library1 values(102,'java');
+	Insert into library1 values(103,'c++'); 
+	Insert into library1 values(103,'oracle'); 
+	Insert into library1 values(108,'dotnet'); //error
+	Insert into library1 values(Null,'DBA'); //valid
+
+Delete from student1 where sno = 101; //valid
+1 row deleted
+Delete from student1 where sno = 102; //valid
+1 row deleted
+One row will be deleting from parent table.
+One row will be deleting from child table automatically. 
+
+
+*On delete set null: When delete the row from parent table. The corresponding value will be changed to null.
+
+Create the parent table:
+	Create table school2(sno number(3),
+		                             Sname varchar2(10),
+		                                      Marks number(3),
+		                                                primary key(sno));
+
+Insert Row parent table:
+	Insert into school2 values(101,'Arun',90);
+       	Insert into school2 values(102,'Kiran',92);
+	Insert into school2 values(103,'Amit',45);
+
+Creating the child table:
+	Create table library2(sno number(3) REFERENCES school2(sno)
+                                                 on delete set null,
+                                             Book_name varchar2(10));
+
+Insert Rows child table:
+	Insert into library2 values(102,'java');
+	Insert into library2 values(103,'c++'); 
+	Insert into library2 values(103,'oracle'); 
+	Insert into library2 values(108,'dotnet'); //error
+	Insert into library2 values(Null,'DBA'); //valid
+
+Delete from school2 where sno = 102; //valid
+One row from parent table is deleted.
+Foreign key column value 102 is changed to null.
+

@@ -1,0 +1,407 @@
+procedure -> exec p1 -> Explcitly Calling
+function  -> select f1 () -> Explicitly Calling
+package   -> exec packagename.procedurename()
+trigger -> automatic procedure -> implicitly calling
+
+Database Trigger:
+-----------------
+Database trigger is a stored procedure that is fired when an insert,update or delete statement is issued against the associated table.
+uses:
+1.To generate data automatically.
+2.To enforce complex integrity constraints(checking with sysdate,checking with data in another table)
+3.To customize complex security authorization
+4.To maintain replicate tables.
+5.To audit data modification.
+
+syntax:
+create or replace trigger <trigger_name> 
+before/after insert or update or delete
+on <tablename> or <viewname>
+for each row
+declare
+variable declaration;
+begin
+executable statement;
+end;
+/
+
+BANK_MASTER
+ACCNO	BALANCE
+1001	10000
+1002	20000
+1003	22500
+1004	40000
+1005	64555
+
+
+BANK_TRANSACTION
+CNAME	ACCNO	TTYPE	amount
+RAJ	1003	DB	2500
+KRAN	1005	CR	20000
+KRAN	1005	DB 	10000
+
+
+drop table bank_master;
+drop table bank_transaction;
+
+create table bank_master(accno NUMBER(4),BALANCE NUMBER(5));
+INSERT INTO BANK_MASTER VALUES(1001,10000);
+INSERT INTO BANK_MASTER VALUES(1002,20000);
+INSERT INTO BANK_MASTER VALUES(1003,30000);
+INSERT INTO BANK_MASTER VALUES(1004,40000);
+INSERT INTO BANK_MASTER VALUES(1005,50000);
+
+
+CREATE TABLE BANK_TRANSACTION(CNAME VARCHAR(20),ACCNO NUMBER(4),TTYPE CHAR(2),AMOUNT NUMBER(5));
+
+
+t1.sql
+
+create or replace trigger t1 after insert on bank_transaction 
+declare
+b1 bank_transaction%rowtype;
+cursor c1 is select * from bank_transaction;
+begin
+open c1;
+loop
+fetch c1 into b1;
+exit when c1%notfound;
+end loop;
+if b1.ttype='CR' then
+update bank_master set balance=balance+b1.amount where accno=b1.accno;
+elsif b1.ttype='DB' then
+update bank_master set balance=balance-b1.amount where accno=b1.accno;
+end if;
+close c1;
+end;
+/
+practical steps:
+---------------
+1.create bank_master table with sample data
+
+2.create bank_transaction empty table 
+
+3.create trigger program
+
+4.insert into bank_transaction table.
+
+5.verify the changes in bank_master table.
+
+
+--How to select last records?
+
+cursor c1 is select * from bank_transaction WHERE ROWID=(SELECT MAX(ROWID) FROM BANK_TRANSACTION)
+
+
+
+
+
+Trigger locks the table for DML operations to provide security
+
+trigger checks for a) valid timing
+		   b) week ends
+		    c) public holidays
+
+2.Create a trigger tr2 For INSERT,DELETE Triggering 
+event where trigger should be fired if the transaction 
+is performed before 10AM and After 4PM?
+
+
+create or replace trigger t11 before insert or delete on 
+bank_master
+declare
+begin
+if to_char(sysdate,'hh24') not in(10,11,12,13,14,15)
+then
+raise_application_error(-20111,'No operations allowed invalid timings');
+end if;
+end;
+/
+
+
+3. create a trigger tr3 for INSERT,DELETE triggering  
+event where trigger should be fired if the transactions are performed on SUNDAY?
+
+create or replace trigger t12 before insert or delete on 
+bank_master
+declare
+begin
+if to_char(sysdate,'DY') in ('SUN') then
+raise_application_error(-20112,'No operations allowed week ends');
+end if;
+end;
+/
+Assignment:
+
+4. create a trigger tr1 for INSERT,DELETE triggering event where trigger should be fired if the transactions are performed on 2nd Saturday and 4th Saturday?
+
+create or replace trigger t13 before insert or delete on 
+bank_master
+declare
+cnt number:=0;
+stdate date;
+enddate date;
+begin
+select sysdate - to_char(sysdate-1,'DD') into stdate from dual;
+select sysdate into enddate from dual;
+while stdate <=enddate
+loop
+if(to_char(stdate,'DY') in('SAT')) THEN
+cnt:=cnt+1;
+end if;
+stdate:=stdate+1;
+end loop;
+if to_char(sysdate,'DY') in ('SAT') and cnt in(2,4) then
+raise_application_error(-20113,'No operations allowed 2nd and 4th saturday ');
+end if;
+end;
+/
+
+5.Create a trigger t12 For INSERT Triggering 
+event where trigger should be fired if the input amount is more than balance.
+
+create or replace trigger t1 after insert on bank_transaction 
+declare
+b1 bank_transaction%rowtype;
+bal number(5);
+cursor c1 is select * from bank_transaction;
+begin
+open c1;
+loop
+fetch c1 into b1;
+exit when c1%notfound;
+end loop;
+select balance into bal from bank_master where accno=b1.accno;
+if (b1.TTYPE='CR') then
+update bank_master set balance=balance+b1.amount where accno=b1.accno;
+elsif ((b1.TTYPE='DB') AND (b1.amount >bal)) then
+raise_application_error(-20113,'No operations allowed Invalid Balance = '||bal);
+else
+update bank_master set balance=balance-b1.amount where accno=b1.accno;
+end if;
+close c1;
+end;
+/
+
+--How to select last records?
+
+create or replace trigger t1 after insert on bank_transaction 
+declare
+bal number(5);
+cursor c1 is select * from (select cname,accno,ttype,amount,rownum  as rn from bank_transaction)
+where rn=(select count(*) from bank_transaction)  ;
+begin
+for b1 in c1
+loop
+select balance into bal from bank_master where accno=b1.accno;
+if (b1.TTYPE='CR') then
+update bank_master set balance=balance+b1.amount where accno=b1.accno;
+elsif ((b1.TTYPE='DB') AND (b1.amount >bal)) then
+raise_application_error(-20113,'No operations allowed Invalid Balance');
+else
+update bank_master set balance=balance-b1.amount where accno=b1.accno;
+end if;
+end loop;
+end;
+/
+
+
+
+
+Write a database trigger to halt the transaction for the employee SALESMAN and PRESIDENT
+
+CREATE OR REPLACE TRIGGER SALES_PRI
+BEFORE INSERT OR UPDATE OR DELETE ON EMP
+FOR EACH ROW
+WHEN (OLD.JOB IN ('SALESMAN','PRESIDENT') OR NEW.JOB IN('SALESMAN','PRESIDENT'))
+BEGIN
+RAISE_APPLICATION_ERROR(-20008,'TRANSACTION NOT ALLOWED FOR SALESMAN AND PRESIDENT....');
+END;
+/
+
+OLD and NEW Pseudorecords
+--------------------------
+1.OLD - DELETED RECORDS
+2.NEW - INSERTED RECORDS
+
+* NEW and OLD are pseudorecords that the PL/SQL runtime engine creates and populates whenever a row-level trigger fires. 
+
+* OLD and NEW store the original and new values, respectively, of the record being processed by the trigger.
+
+
+CREATE OR REPLACE TRIGGER STOP_TRANSACTION BEFORE INSERT OR UPDATE OR DELETE ON EMP
+BEGIN
+  IF USER!='SCOTT' THEN
+    RAISE_APPLICATION_ERROR(-20001,'SORRY TABLE IS UNDER MAINTAINENCE...PLEASE CONTACT SCOTT');
+  END IF;
+END;
+/
+
+
+
+Write a database trigger store the username ,type of transaction ,date of transaction and time of transaction of table DEPT into the table DEPT_LOG.
+
+
+step1: To create Dept_log table
+
+create table dept_log(username varchar(20),ttype char(1),
+tdate timestamp);
+
+Step2:
+
+CREATE OR REPLACE TRIGGER TRANS_TYPE
+AFTER INSERT OR UPDATE OR DELETE ON DEPT
+DECLARE
+V VARCHAR2(50);
+BEGIN
+IF INSERTING THEN
+V:='I';
+ELSIF UPDATING THEN
+V:='U';
+ELSE
+V:='D';
+END IF;
+INSERT INTO DEPT_LOG VALUES (USER,V,SYSDATE);
+END;
+/
+
+INSERTING,UPDATING,DELETING - KEYWORD
+
+ the INSERTING,UPDATING,DELETING keywords are used in conjunction with the TRIGGER statement
+
+
+* Trigger converts student name to uppercase automatically
+
+create or replace trigger up_convert before insert on student
+for each row
+begin
+:new.sname:=upper(:new.sname);
+end;
+/
+Bind variables:
+---------------
+:new => newly inserted value. (insert)
+:old => old values. (delete)
+
+Note: In the WHEN clause of a conditional trigger, a correlation name is not a placeholder for a bind variable. Therefore, omit the colon in the preceding.
+
+/* 7.Write a database trigger display the message when the inserting hiredate is greater than system date
+*/
+CREATE OR REPLACE TRIGGER HIREDATE_OVER
+AFTER INSERT ON EMP
+FOR EACH ROW
+BEGIN
+IF :NEW.HIREDATE != SYSDATE THEN
+RAISE_APPLICATION_ERROR(-20009,'INVALID HIREDATE.....');
+END IF;
+END;
+/
+
+8.create a trigger on complex views?
+
+COMPLEX VIEWS: (FAQ)
+--------------------
+A view is said to be complex view, when it contains 
+any of the following;
+
+1. Group Functions
+2. Group By clause
+3. Joins
+4. Mathematical Expressions
+5. DISTINCT Keyword
+
+Note :
+By default complex view is non updatable view.
+
+solution:
+
+INSTEAD OF triggers provide a transparent way of modifying views that cannot be modified directly through DML statements ( INSERT , UPDATE , and DELETE ). 
+
+* These triggers are called INSTEAD OF triggers because, unlike other types of triggers, Oracle fires the trigger instead of executing the triggering statement.
+
+Step1 : To create 2 tables
+
+create table trainer(fullname varchar2(20));
+
+create table subject(subjectname varchar2(20));
+
+insert into trainer values('shekar');
+insert into subject values('oracle');
+
+create view trainer_subject_view as select fullname,subjectname from trainer,subject;
+
+select * from trainer_subject_view;
+
+insert into trainer_subject_view  values('raj','tsql');  --invalid
+
+
+create or replace trigger tr_io_insert
+instead of insert on trainer_subject_view
+for each row
+begin
+insert into trainer(fullname) values(:new.fullname);
+insert into subject(subjectname) values(:new.subjectname);
+end;
+/
+
+--verification
+
+select * from trainer;
+select * from subject;
+
+
+
+--How many triggers can be applied to a table?
+
+A maximum of 12 triggers can be applied to one table. 
+
+Disabling Trigger:
+
+syntax:
+
+
+alter table <table_name> disable all triggers;
+
+> alter table transaction disable all triggers;
+
+enabling trigger:
+
+alter table <table_name> enable all triggers
+
+> alter table transaction enable all triggers;
+
+--HOW TO ENABLE OR DISABLE PARTICULAR TRIGGER?
+
+ALTER TRIGGER T11 DISABLE /ENABLE;
+
+Removing trigger:
+
+ drop trigger <trigger_name>;
+
+ex:
+drop trigger t1;
+
+
+
+checking for existing triggers:
+
+desc user_triggers
+
+select trigger_name,table_name,status from user_triggers;
+
+
+
+find the examples link
+
+http://myorastuff.blogspot.com/2015/11/oracle-pl-sql-questions-and-answers-for_11.html
+
+Difference between procedures and Triggers:
+
+procedures				Triggers
+
+
+1.called Explicitly	(Exec p1)	1.called implicitly
+2.can be created without a table.  2.can't be created without a table.
+3.it accepts parameters		      	3.it won't accept parameters
+4.it returns a value(out)		4.it won't return a value.
+

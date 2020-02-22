@@ -1,0 +1,383 @@
+File:
+-----
+* A file is a collection of data stored in one unit, identified by a filename. 
+
+* It can be a document, picture, audio or video stream, data library, application, or other collection of data.
+
+File System:
+------------
+* A filesystem is the methods and data structures that an operating system uses to keep track of files on a disk or partition; 
+
+* This is the way the files are organized on the disk. 
+
+Disadvantages of the file system:
+---------------------------------
+1.  Data Redundancy
+
+2.  Difficulty in Accessing Data
+
+3.  Limited Data Sharing
+
+4.  Integrity Problems
+
+5.  Concurrent Access problem
+
+6.  Security Problems
+
+
+Database :
+
+* A database is an collection  of data that is organized to be easily accessed, managed and updated  to relational databases.
+
+
+Database Model:
+----------------
+
+* A database model is a type of data model that determines the logical structure of a database and fundamentally determines in which manner data can be stored, organized and manipulated.
+
+
+ The most popular example of a database model is the relational model, which uses a table-based format.
+
+
+Types of database models
+
+1.Hierarchical database model.
+
+2.Relational model.
+
+3.Network model.
+
+4.Object-oriented database model.
+
+
+Hierarchical Database Model:
+----------------------------
+* A Hierarchical database model is a data model in which the data are organized into a tree-like structure.
+
+* The data are stored as records which are connected to one another through links. A record is a collection of fields, with each field containing only one value.
+
+
+ex:  hierarchical databases is Windows Registry in the Microsoft Windows operating systems.
+
+
+
+Network Database Model:
+-----------------------
+Network database model is a model for modeling the entities in such a way that one child entity can have more than one parent entities.
+
+Characteristics of network model:
+----------------------------------
+
+* More better than hierarchical model.
+
+* Supports many to many relationships.
+
+* Many parent can have many child.
+
+* Many child can have many parents.
+
+* Complex structure.
+    
+* Not very flexible to reorganize the model.
+    
+* Query facility is not available in network model.
+
+Object Oriented Database Model: (MVC)
+-------------------------------
+* Object Oriented Database (OODB) provides all the facilities associated with object oriented paradigm.
+
+*  It enables us to create classes, organize objects, structure an inheritance hierarchy and call methods of other classes. 
+
+Basic concept oops:
+-------------------
+1.object
+2.class
+3.inheritance
+4.polymorphism
+5.Data Abstraction
+6.Data Encapsulation
+7.Dynamic binding
+8.Message passing
+
+4.Relational database Model - oracle
+
+
+Plsql operators:
+----------------
+Arithmetical operators:
+-----------------------
++ addition
+- subtract
+* multiply
+/ division (quotient)
+
+Mathematical function:
+Mod() - division remainder
+
+ex:
+
+10 + 3 => 13
+10 - 3 => 7
+10 * 3 => 30
+10 / 3 = 3
+mod(10,3) =1
+
+Relational operators or Comparision operators:
+----------------------------------------------
+< less than
+> greater than
+<= less than or equal to
+>= greater than or equal to
+= equal to
+!= or <> not equal to
+
+a>b
+
+Logical operators:
+----------------
+and
+or
+not
+	and
+a	b	c=a*b
+0	0	0
+0	1	0
+1	0	0
+1	1	1
+
+Note : if all input values are true then output is true else false.
+
+	or
+a	b	c=a+b
+0	0	0
+0	1	1
+1	0	1
+1	1	1
+
+Note: if any one input values are true then output is true else false.
+
+	not
+a	c
+0	1
+1	0
+
+
+Special operators:
+-----------------
+in
+not in
+between 
+not between
+like
+not like
+is null
+is not null
+
+Set operators:
+---------------
+union 
+union all
+intersect
+minus
+
+Assignment operators:
+--------------------
+:=
+a:=100
+b:=200
+c:=a+b
+Concatenation operators:
+------------------------
+|| - pipe line char
+
+10 + 20 = 30
+
+'sql' || 'school' = sqlschool
+
+
+Plsql datatypes / Fieldtypes:
+-----------------------------
+character datatypes(a to z and 0 to 9)
+----------------------------------------
+
+char(2000) - fixed length char - 1 byte - Ascii - Static memory allocation 
+- ANSI Syntax
+
+varchar(2000) - Variant length char - 1 byte - Ascii - Dynamic memory allocatin - ANSI syntax
+
+varchar2(4000) - Variant length char - 1 byte - Ascii - Dynamic memory allocation - Oracle syntax
+
+Nchar(40) - Fixed length char - 2 bytes - Unicode  - static memory allocation - Ansi syntax
+
+Nvarchar(40) - Variant length char - 2 bytes - Unicode - Dynamic memory allocation
+
+Number datatypes:(0 to 9)
+-------------------------
+number(10) => 10 digits
+number(10,2) => 9999999.99
+int - 4 bytes
+or
+INTEGER - 4 bytes
+
+Decimal point datatypes:
+------------------------
+float - 4 bytes (approx. 7 decimal digits)
+
+Datetime datatypes:
+-----------------
+date - 8 bytes -> 'dd-mm-yy' (default dateformat)
+datetime - 14 bytes -> 'dd-mm-yy hh:mi:ss AM/PM'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

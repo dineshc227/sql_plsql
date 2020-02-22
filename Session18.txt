@@ -1,0 +1,792 @@
+PL/SQL CONTROL STRUCTURES 
+--------------------------
+CONTROL STRUCTURE:
+------------------
+* Control structrure refers to the order in which the various instruction in a programs are to be executed.
+
+* The other name for control sturcture "flow of control".
+
+control structrue classified into three types:
+
+1.SEQUENTIAL CONTROL STRUCTURE - ONE BY ONE
+
+2.SELECTIVE CONTROL STURCUTRE - TO ALLOWS TO CREATE THE CONDITION
+
+3.REPETATIVE CONTROL STRUCUTRE - TO ALLOWS TO CREATE THE LOOP
+
+
+Selective Control strucuture:
+---------------------------
+1.If statement
+2.If else statement
+3.if elsif statement
+4.Nested if statement
+5.Case statement
+
+If statement:
+-------------
+if <condition> then 
+statement1;
+statement2;
+end if;
+
+If....else statement
+-----------------
+if <condition> then
+statement1;
+else
+statement2;
+end if;
+/
+If..then...else statement:
+------------------------
+Syntax:
+	if <condition1> then
+	    Sequence of statements1;
+	elsif <condition2> then
+                   Sequence of statements2;
+	elsif <condition3> then
+		sequence of statements3;
+	
+	Else
+	      Sequence of statements4;
+	End if;
+
+Note: 
+
+1.if Condition1 is true statement1 is executed.
+2.if condition1 if false then check the condition2.
+3.if condition2 is true then statement2 is executed.
+4.if condition2 is false then check the condition3.
+5.if condition3 is true then statement3 is executed.
+6.if condition3 is false then else statement executed.
+
+
+
+Nested if statement:
+-------------------
+if <condition1> then
+	statement1
+	if <condition2> then
+	statement2
+	else
+	statement3
+	end if;
+else
+	statemen4;
+end if;
+
+note: 
+
+1.if condition1 is true then statement1 executed and check condition2.
+
+2.If condition2 is true then statement2 execute else statement3 executed.
+
+3.if condition1 is false then statement4 executed.
+
+
+
+
+case statement:
+---------------
+select variable:=case <expression>
+when 1 then 'statement1'
+when 2 then 'statement2'
+when 3 then 'statement3'
+else 'Invalid statement'
+end case;
+/
+
+
+
+/* write a pl-sql program to find the greatest of 2 numbers */
+declare 
+a number;
+b number;
+begin
+a:=&a;
+b:=&b;
+if (a >b) then
+dbms_output.put_line('a is greater='||a);
+else
+dbms_output.put_line('b is greater='||b);
+end if;
+end;
+/
+
+/* write a pl-sql program to find the greatest of 3 numbers */
+declare
+a number:=&a;
+b number:=&b;
+c number:=&c;
+begin
+if a>b and a>c then
+dbms_output.put_line('A is greater='||a);
+elsif b>c then
+dbms_output.put_line('B is greater='||b);
+else
+dbms_output.put_line('C is gerater='||c);
+end if;
+end;
+/
+Assignment : 
+
+Write a plsql program to find the greatest of 4 numbers.
+
+
+/* Write a plsql program to create student mark list */
+declare
+name varchar2(20);
+sno number;
+s1 number;
+s2 number;
+s3 number;
+stot number;
+savg number;
+sres char(5);
+begin
+name:='&name';
+sno:=&sno;
+s1:=&s1;
+s2:=&s2;
+s3:=&s3;
+stot:=s1+s2+s3;
+savg:=stot/3;
+if (s1>=40 and s2>=40 and s3>=40) then
+sres:='Pass';
+else
+sres:='Fail';
+end if;
+dbms_output.put_line('Name='||name);
+dbms_output.put_line('Sno='||sno);
+dbms_output.put_line('Total='||stot);
+dbms_output.put_line('Average='||savg);
+dbms_output.put_line('Result='||sres);
+end;
+/
+
+Assignment :
+
+write a plsql program to create employee salary list
+ename="xxx"
+empno=1001
+basicpay=10000
+hra=1000
+ma=2500
+ta=1650
+pf=1200
+lic=1000
+itax=1800
+grosspay=basicpay+hra+ma+ta
+netpay=grosspay-(pf+lic+itax)
+
+
+
+/* Write a plsql program to find the given year is leap year or not */
+
+DECLARE 
+YR NUMBER;
+BEGIN
+YR:=&year;
+IF MOD(YR,4)=0 THEN
+DBMS_OUTPUT.PUT_LINE('LEAP YEAR='||YR);
+ELSE
+DBMS_OUTPUT.PUT_LINE('NOT LEAP YEAR='||YR);
+END IF;
+END;
+/
+
+/* Example for nested if statement
+
+/* write a plsql program to find the given number is positive or negative number or equal to zero. */
+
+declare
+num number:=&num; 
+begin
+if num >= 0 then
+    if num = 0 then
+       dbms_output.put_line('Given number Zero:'||num);
+    else
+        dbms_output.put_line('Positive number:'||num);
+    end if; 
+else
+    dbms_output.put_line('Negative number:'||num);
+end if;
+end;
+/
+
+/* Write a PL-SQL program to convert number into day of week */
+DECLARE
+  n number(2); 
+BEGIN
+n:=&n;
+  CASE n
+    WHEN 1 THEN 
+dbms_output.put_line('Sunday');
+WHEN 2 THEN 
+dbms_output.put_line('Monday');
+WHEN 3 THEN 
+dbms_output.put_line('Tuesday');
+WHEN 4 THEN 
+dbms_output.put_line('Wednesday');
+WHEN 5 THEN 
+dbms_output.put_line('Thursday');
+WHEN 6 THEN 
+dbms_output.put_line('Friday');
+WHEN 7 THEN 
+dbms_output.put_line('Saturday');
+     ELSE dbms_output.put_line('n is some other value.'||n);
+  END CASE;
+END;
+/
+
+Assignment :
+
+Write a plsql program to convert number into month of year.
+
+write a plsql program to convert number into season of the year
+
+12,1,2 : Winter
+3,4,5 : Summer
+6,7,8 : Spring
+9,10,11 : Autumn
+
+  CASE n
+    WHEN 12 OR 1 OR 2 THEN
+
+
+-- Write a plsql program to display Grade values.
+DECLARE 
+   grade char(1) := '&grade';
+BEGIN 
+   CASE grade 
+      when 'A' then dbms_output.put_line('Excellent'); 
+      when 'B' then dbms_output.put_line('Very good'); 
+      when 'C' then dbms_output.put_line('Well done'); 
+      when 'D' then dbms_output.put_line('You passed'); 
+      when 'F' then dbms_output.put_line('Better try again'); 
+      else dbms_output.put_line('No such grade'); 
+   END CASE; 
+END; 
+/
+
+II method
+
+-- Write a plsql program to display Grade values.
+DECLARE 
+   grade char(1) := '&grade';
+   result varchar(20);
+BEGIN 
+   CASE grade 
+      when 'A' then result:='Excellent';
+      when 'B' then result:='Very good'; 
+      when 'C' then result:='Well done'; 
+      when 'D' then result:='You passed'; 
+      when 'F' then result:='Better try again'; 
+      else dbms_output.put_line('No such grade'); 
+   END CASE; 
+   dbms_output.put_line(result);
+END; 
+/
+
+sql select statement syntax:
+-----------------------------
+select fieldname1,fieldname2,fieldname3 from tablename where <condition>;
+
+plsql select statement syntax:
+-----------------------------
+select fieldname1,fieldname2,fieldname3 into var1,var2,var3 from <tablename> where <condition>;
+
+
+/* Write a plsql program to select dept details from dept table */
+declare
+a number(2);
+b varchar2(14);
+c varchar2(13);
+begin
+a:=&deptno;
+select deptno,dname,loc into a,b,c from dept where deptno=a;
+dbms_output.put_line(a||'    '||b||'    '||c);
+end;
+/
+
+
+
+/* Write a plsql program to select ename,empno,salary,deptno from emp table */
+DECLARE
+NAME VARCHAR2(10);
+ENO NUMBER(4);
+SALARY NUMBER(7,2);
+DNO NUMBER(2);
+BEGIN
+SELECT ENAME,EMPNO,SAL,DEPTNO INTO NAME,ENO,SALARY,DNO FROM EMP WHERE ENAME='&ENAME'; 
+DBMS_OUTPUT.PUT_LINE(NAME ||'   '||ENO||'    '||SALARY||'    '||DNO);
+END;
+/
+
+/* WRITE A PLSQL PROGRAM TO SELECT SALGRADE DETIALS */
+declare
+g number;
+l number;
+h number;
+begin
+select grade,losal,hisal into g,l,h from salgrade where grade=&g;
+dbms_output.put_line(g||'   '||l||'    '||h);
+end;
+/
+
+
+
+Ex:
+/* write a plsql program to accept deptno as argument and return dept location */
+DECLARE
+       dno number(2);
+BEGIN
+       select deptno into dno  from dept where deptno=&deptno;
+
+       if dno = 10 then
+          dbms_output.put_line('Location is NEW YORK');
+       elsif dno = 20 then
+               dbms_output.put_line('Location is DALLAS');
+       elsif dno = 30 then
+               dbms_output.put_line('Location is CHICAGO');
+       else
+               dbms_output.put_line('Location is BOSTON');
+       end if;
+END;
+/
+
+
+Output:
+		Location is NEW YORK
+
+CASE 
+
+Syntax:
+	Case test-variable
+		When value1 then sequence of statements;
+		When value2 then sequence of statements;
+		……
+		When valuen then sequence of statements;
+		Else sequence of statements;
+	End case;
+
+Ex:
+DECLARE
+      dno number(2);
+BEGIN
+       select deptno into dno from dept where DEPTNO =&DEPTNO;
+       case dno
+               when 10 then
+                         dbms_output.put_line('Location is NEW YORK');
+               when 20 then
+                         dbms_output.put_line('Location is DALLAS');
+               when 30 then
+                         dbms_output.put_line('Location is CHICAGO');
+               when 40 THEN
+                         dbms_output.put_line('Location is BOSTON');
+else 
+dbms_output.put_line('Invalid deptno');
+        end case;
+END;
+/
+
+Output:
+		Location is NEW YORK
+
+
+Repetative Control Structure:
+----------------------------
+* user allows to create the loop.
+
+* There are 3 types of loops
+
+a.Simple loop - Exit controlled loop
+b.while loop - Entry controlled loop
+c.for loop - counter loop
+
+SIMPLE LOOP (EXIT CONTROLLED LOOP)
+Syntax:
+	Loop
+	Sequence of statements;
+	Exit when <false_condition>;
+	End loop;
+
+
+while loop syntax: (ENTERY CONTROLLED lOOP)
+-----------------
+
+While <True_condition> 
+loop
+Sequence of statements;
+End loop;
+
+
+FOR LOOP Syntax: (COUNTER LOOP)
+-----------------
+For variable in [REVERSE] low_bound..high_bound 
+loop
+Sequence of statements;
+End loop;
+
+
+/*  1 2 3 .....N */
+DECLARE 
+I NUMBER :=1;
+N NUMBER;
+BEGIN
+N:=&N;
+LOOP
+DBMS_OUTPUT.PUT_LINE(I);
+I:=I+1;
+EXIT WHEN I>N;
+END LOOP;
+END;
+/
+
+
+--how to display in single line
+
+DECLARE 
+i number;
+begin
+      i:=1;
+loop
+dbms_output.put(i);
+i:=i+1;
+exit when i>=10;
+end loop;
+      dbms_output.new_line;
+  end;
+  /
+
+--EXAMPLE FOR WHILE LOOP
+
+/*  1 2 3 .....N */
+DECLARE 
+I NUMBER :=1;
+N NUMBER;
+BEGIN
+N:=&N;
+WHILE I <=N LOOP
+DBMS_OUTPUT.PUT_LINE(I);
+I:=I+1;
+END LOOP;
+END;
+/
+
+--10 9 8 7 5 ....1
+declare 
+i number:=10;
+begin
+while i>=1
+loop
+dbms_output.put_line(i);
+i:=i-1;
+end loop;
+end;
+/
+
+--EXAMPLE FOR FOR LOOP
+
+/*  1 2 3 .....N */
+DECLARE 
+I NUMBER;
+N NUMBER;
+BEGIN
+N:=&N;
+FOR I IN 1..N LOOP
+DBMS_OUTPUT.PUT_LINE(I);
+END LOOP;
+END;
+/
+
+
+--FOR LOOP REVERSE ORDER
+
+/*  1 2 3 .....N */
+DECLARE 
+I NUMBER;
+N NUMBER;
+BEGIN
+N:=&N;
+FOR I IN REVERSE 1..N LOOP
+DBMS_OUTPUT.PUT_LINE(I);
+END LOOP;
+END;
+/
+
+--PLSQL PROGRAM TO CREATE MULTIPLICATION TABLE
+N  x i = r
+15 X 1 = 15
+15 X 2 = 30
+15 X 3 = 45
+15 X 4 = 60
+.....
+
+15 X 20 =300
+
+declare
+n number;
+i number:=1;
+r number;
+begin
+n:=&n;
+loop
+r:=n * i;
+dbms_output.put_line(n ||' X '||i||' = '||r);
+exit when i>=15;
+i:=i+1;
+end loop;
+end;
+/
+
+--for loop
+
+--PLSQL PROGRAM TO CREATE MULTIPLICATION TABLE
+declare
+i number:=1;
+n number:=&n;
+r number;
+begin
+for i in 1..100
+loop
+r:=n*i;
+dbms_output.put_line(n||' X '||i||' = '||r);
+end loop;
+end;
+/
+
+
+
+
+
+sql select statement syntax:
+---------------------------
+select fieldname1,fieldname2,fieldname3 from tablename where condition;
+
+Plsql select command syntax:
+----------------------------
+
+select fieldname1,fieldname2,fieldname3 into var1,var2,var3 from tablename where <condition>;
+
+or
+select * into var1 from tablename where <condition>;
+
+
+/* Write a plsql program to select dept details from dept table */
+declare 
+a number(2);
+b varchar2(14);
+c varchar2(13);
+begin
+select deptno,dname,loc into a,b,c from dept where deptno =&deptno;
+dbms_output.put_line(a||'   '||b ||'    '|| c);
+end;
+/
+
+
+//plsql program to select ename,empno and salary from emp table
+declare 
+en varchar2(20);
+eno number(4);
+salary number(5);
+begin
+select ename,empno,sal into en,eno,salary from emp where empno=&empno;
+dbms_output.put_line(en||'   '||eno||'   '||salary);
+end;
+/
+
+
+
+/* write a plsql program to insert dept details into dept table and check the availability. */
+
+DECLARE
+A NUMBER(2);
+B VARCHAR2(14);
+C VARCHAR2(13);
+CNT NUMBER(2);
+BEGIN
+A:=&DEPTNO;
+B:='&DNAME';
+C:='&LOC';
+SELECT COUNT(DEPTNO) INTO CNT FROM DEPT WHERE DEPTNO=A;
+IF(CNT=0) THEN
+INSERT INTO DEPT VALUES(A,B,C);
+DBMS_OUTPUT.PUT_LINE('1 row inserted');
+ELSE
+DBMS_OUTPUT.PUT_LINE('DEPT DETAILS EXISTS');
+END IF;
+END;
+/
+
+/* write a plsql program to delete dept details and check the avilability. */
+
+DECLARE
+A NUMBER(2);
+CNT NUMBER(2);
+BEGIN
+A:=&DEPTNO;
+SELECT COUNT(DEPTNO) INTO CNT FROM DEPT WHERE DEPTNO=A;
+IF(CNT=1) THEN
+DELETE FROM DEPT WHERE DEPTNO=A;
+DBMS_OUTPUT.PUT_LINE('DEPT DETAILS DELTED');
+ELSE
+DBMS_OUTPUT.PUT_LINE('DEPT DETAILS DOES NOT EXISTS');
+END IF;
+END;
+/
+
+/* write a plsql program to delete dept details and check the avilability AND verify the PASSWORD. */
+DECLARE
+A NUMBER(2);
+PWD VARCHAR2(10);
+CNT NUMBER(2);
+BEGIN
+A:=&DEPTNO;
+PWD:='&PWD';
+SELECT COUNT(DEPTNO) INTO CNT FROM DEPT WHERE DEPTNO=A;
+IF(CNT=0) THEN
+DBMS_OUTPUT.PUT_LINE('DEPT DETAILS DOES NOT EXISTS');
+ELSIF PWD!='123' THEN
+DBMS_OUTPUT.PUT_LINE('INVALID PASSWORD TRY AGAIN..');
+ELSE
+DELETE FROM DEPT WHERE DEPTNO=A;
+DBMS_OUTPUT.PUT_LINE('1 ROW DELETED');
+END IF;
+END;
+/
+
+
+
+DROP TABLE LOGIN;
+
+CREATE TABLE LOGIN(USERNAME VARCHAR(10),PASSWORD VARCHAR(10));
+
+INSERT INTO LOGIN VALUES('AAA','123');
+INSERT INTO LOGIN VALUES('BBB','456');
+INSERT INTO LOGIN VALUES('CCC','789');
+
+SELECT * FROM LOGIN;
+
+/* WRITE A PLSQL PROGRAM TO FIND THE USERNAME AND PASSWORD IS VALID OR NOT */
+
+DECLARE 
+UNAME VARCHAR2(10);
+PWD VARCHAR2(10);
+C NUMBER;
+BEGIN
+UNAME:='&USERNAME';
+PWD:='&PWD';
+SELECT COUNT(*) INTO C FROM LOGIN WHERE USERNAME=UNAME AND PASSWORD=PWD;
+IF (C=1) THEN
+DBMS_OUTPUT.PUT_LINE('Welcome USERNAME:'||UNAME);
+ELSE
+DBMS_OUTPUT.PUT_LINE('INVALID USERNAME AND TRY AGAIN');
+END IF;
+END;
+/
+
+/* Write a plsql program to modify the employee salary if it is working and valid increment above 500. */
+
+declare
+eno number;
+incr number;
+cnt number;
+begin
+eno:=&eno;
+incr:=&incr;
+select count(*) into cnt from emp where empno=eno;
+if(cnt=0) then
+dbms_output.put_line('Employees does not exists');
+elsif incr < 500 then
+dbms_output.put_line('Invalid increment');
+else
+update emp set sal=sal+incr where empno=eno;
+dbms_output.put_line('1 row updated');
+end if;
+end;
+/
+
+
+
+
+Plsql dynamic datatype:
+-----------------------
+1.%type - single column /Single field 
+2.%rowtype - single row /Single record
+
+What is the purpose of %type data type? Explain with example.?
+
+* It assigns a variable the same data type used by the column, for which the variable is created.
+
+For
+example,
+dcode := dept.detpno%type;
+
+
+The variable dcode is created with the same data type as that of the deptno column of the dept table.
+
+
+%type syntax:
+-------------
+varname tablename.colname%type;
+--example
+
+name emp.ename%type;
+eno emp.empno%type;
+salary emp.sal%type;
+dno emp.deptno%type;
+a dept.deptno%type;
+b dept.dname%type;
+c dept.loc%type;
+
+
+%rowtype syntax:
+variablename tablename%rowtype;
+
+
+
+EXAMPLE
+
+x emp%rowtype;
+y dept%rowtype;
+z salgrade%rowtype;
+
+
+What is the purpose of %rowtype data type? Explain with example.
+
+* It declares a composed variable that is equivalent to the row of a table. 
+
+* After the variable is created, the fields of the table can be accessed, using the name of this variable.
+
+For example
+emptype := emp%rowtype;
+name := emptype.empname;
+
+--example
+
+enam
+
+
+--plsql program to select ename,empno and salary from emp table
+declare 
+en emp.ename%type;
+eno emp.empno%type;
+salary emp.sal%type;
+begin
+select ename,empno,sal into en,eno,salary from emp where empno=&empno;
+dbms_output.put_line(en||'   '||eno||'   '||salary);
+end;
+/
+
+
+--plsql program to select ename,empno and salary from emp table
+declare 
+e1 emp%rowtype;
+begin
+select * into e1 from emp where empno=&empno;
+dbms_output.put_line(e1.ename||'   '||e1.empno||'   '||e1.sal);
+end;
+/
+

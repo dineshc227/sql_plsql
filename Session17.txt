@@ -1,0 +1,334 @@
+What is the difference between sql and plsql?
+
+sql - Non Procedural language - ibm
+plsql - Procedural lanugage - oracle
+
+PL/SQL
+PROCEDURAL LANGAUGE / STRUCTURED QUERY LANGUAGE
+OR
+PROGRAMMING LANGUAGE /STRUCTURE QUERY LANGUAGE.
+
+PLSQL -Definition 
+
+	PL-SQL deals with set of statements that are grouped in the form of a block and submitted to server at once for execution.
+
+PL-SQL is a set of programming Language including transaction control, exception or error handling, row processing, control structure and declared variables. 
+
+
+1.In Oracle database management, 
+PL/SQL is a procedural language extension 
+to Structured Query Language (SQL). 
+
+2.The purpose of PL/SQL is to combine database language and procedural or programming language. 
+
+3. The basic unit in PL/SQL is called a block, 
+which is made up of three parts: 
+
+a. declarative part, an executable part, 
+and an exception-building part.
+ 
+
+4. Without PL/SQL, Oracle must process SQL statements one at a time and in a network environment, this can affect traffic flow and slow down response time.
+ 
+PL/SQL blocks can be compiled once and 
+stored in executable form to improve response time.
+ 
+
+
+
+ADVANTAGES OF PL/SQL
+
+1.HIGHER PRODUCTIVITY
+2.SUPPORT FOR SQL
+3.BETTER PERFORMANCE
+4.PORTABLITY
+5.INTEGRATION WITH ORACLE
+
+
+
+PROGRAMMING STRUCTURE:
+---------------------
+
+DECLARE
+
+	VARIABLE DECLARATION;
+
+BEGIN
+
+	EXECUTABLE STATEMENT;
+
+EXCEPTION
+
+	ERROR HANDLING;
+
+END;
+/
+
+
+
+
+PL/SQL OPERATORS:
+
+1.ARITHMETICAL OPERATORS:
+	+
+	-
+	*
+	/
+2.RELATIONAL OPERATORS:
+	<
+	>
+	<=
+	>=
+	=
+	!=
+3.LOGICAL OPERATORS
+	AND
+	OR
+	NOT
+4.SPECIAL OPERATORS:
+	IN SPECIFIC VALUE
+	NOT IN - EXCEPT SPECIFIC VALUE
+	BETWEEN - TO SELECT RANGE
+	NOT BETWEEN - EXCEPT RANGE
+	LIKE - STARTING LETTER 'S'
+	NOT LIKE - EXCEPT
+	IS NULL - TO SELECT NULL VALUE
+	IS NOT NULL - TO SELECT NOT NULL VALUE5.
+
+5.SET OPERATORS:
+
+	UNION
+	UNION ALL
+	INTERSECT
+	MINUS
+PLSQL (ONLY)
+
+6. Assignment operator:
+
+:= ASSIGNMENT OPERATOR
+
+A:=10;
+NAME:='RAJA';
+d1:='22-FEB-18'
+
+7.CONCATENATION OPERATOR (||)(TWO PIPE LINE CHARACTER)
+
+
+
+
+package:
+
+collection of function or procedures or varaible.
+
+* To display any string in the output window:
+
+dbms_output.put_line('Message');
+
+
+dbms_output => package name
+put_line() => procedure name
+
+Note: By default serveroutput window is off only.
+
+how to open the serveroutput window?
+
+SET SERVEROUTPUT ON; (only one time)
+
+
+
+
+
+
+/* Write a plsql program to calculate the addition of two numbers */
+
+declare
+a number;
+b number;
+c number;
+begin
+a:=&a;
+b:=&b;
+c:=a+b;
+dbms_output.put_line('add two values='||c);
+end;
+/
+
+
+Note: How to open the output window.
+
+ set serveroutput on; (only one time)
+
+
+
+
+/* write a plsql program to calculate all arithmetical operators  (I method) */ 
+
+declare
+a number;
+b number;
+c number;
+d number;
+e number;
+f number;
+begin
+a:=&a;
+b:=&b;
+c:=a+b;
+d:=a-b;
+e:=a*b;
+f:=a/b;
+dbms_output.put_line('add two values='||c);
+dbms_output.put_line('sub two values='||d);
+dbms_output.put_line('mul two values='||e);
+dbms_output.put_line('div two values='||f);
+end;
+/
+
+II method
+
+/* write a plsql program to calculate all arithmetical operators */
+
+declare
+a number;
+b number;
+c number;
+d number;
+e number;
+f number;
+begin
+a:=&a;
+b:=&b;
+c:=a+b;
+d:=a-b;
+e:=a*b;
+f:=a/b;
+dbms_output.put_line('add two values='||c||chr(10)||'sub two values='||d||chr(10)||'mul two values='||e||chr(10)||'div two values='||f);
+end;
+/
+
+ascii - 10  LF  (NL line feed, new line)  
+
+/* write a plsql program to calculate the length of the string */
+
+declare
+name varchar2(20);
+l number;
+begin
+name:='&name';
+l:=length(name);
+dbms_output.put_line('length of the string='||l);
+end;
+/
+
+
+/* write a plsql program to calculate the length of the string except spaces */
+
+declare
+name varchar2(200);
+l number;
+s number;
+begin
+name:='&name';
+l:=length(name);
+s:=Regexp_count(name,' ');
+dbms_output.put_line('Length of the string='||l);
+dbms_output.put_line('Spaces='||s);
+dbms_output.put_line('Actual string length='||(l-s));
+end;
+/
+
+
+
+https://www.techonthenet.com/oracle/functions/regexp_count.php
+
+/* write a plsql program to display the swapping of two numbers t:=a;a:=b;b:=t; */
+declare
+a number;
+b number;
+t number;
+begin
+a:=&a;
+b:=&b;
+t:=a;
+a:=b;
+b:=t;
+dbms_output.put_line('After Swapping');
+dbms_output.put_line('a='||a);
+dbms_output.put_line('b='||b);
+end;
+/
+
+
+/* write a plsql program to display the swapping of two numbers without using temporary variable.
+a=100
+b=200
+a=a+b;a=300
+b=a-b;b=100
+a=a-b; a=200
+*/
+
+declare 
+a number;
+b number;
+begin
+a:=&a;
+b:=&b;
+a:=a+b;
+b:=a-b;
+a:=a-b;
+dbms_output.put_line('after swapping');
+dbms_output.put_line('a='||a);
+dbms_output.put_line('b='||b);
+end;
+/
+
+
+--how to find the occurence of char's (FAQ)
+declare 
+name varchar2(20);
+ch  char(1);
+counter number;
+begin
+name:='&name';
+ch:='&ch';
+counter:=REGEXP_COUNT(name,ch);
+dbms_output.put_line('No. of Times='||counter);
+end;
+/
+
+/* Write a plsql program to calcluate simple interest
+*/
+declare
+amount number;
+n number;
+r number;
+si number;
+begin
+amount:=&amount;
+n:=&n;
+r:=&r;
+si:=(amount * n * r)/100;
+dbms_output.put_line('Simple interest ='||si);
+end;
+/
+
+Assignment:
+------------
+1.Write a plsql program to calculate compound interest.
+
+A = P(1 + r)t
+
+
+/* Write a PL-SQL program to convert number into weeks and days */
+DECLARE
+ n number:=&n;
+ w number;
+ d number;
+  begin
+ w:=trunc(n/7);
+ d:=mod(n,7);
+ dbms_output.put_line('No of weeks='||w);
+ dbms_output.put_line('No of days='||d);
+ end;
+ /
+ 

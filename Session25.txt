@@ -1,0 +1,724 @@
+What is the difference between Database and DWH?
+
+What is the difference between OLTP and OLAP?
+
+1.Database systems designed for Transactions purpose.
+
+2.Data is frequently  modified (Volatile data).
+
+3.More number of users.
+
+4.Normalized tables maintained.
+
+5.More no.of Indexes not recommended.
+
+6.Operational oriented.
+
+7.Database Systems manitain current data (< one year).
+
+8.Small amount of data.
+
+9.SQL & PL-SQL
+
+DWH:
+---
+
+1.DWH Systems designed for Analysis and Reporting purpose.
+
+2.Data modifications are not frequently. (Non voltaile data).
+
+3.Less number of users.(Data Analyst Team)
+
+4.Denormalized tables are maintained.
+
+5.More no.of Indexes recommanded.
+
+6.Subject oriented.
+
+7.DWH maintain historical data ( 1 - 10 years of data).
+
+8.Huge data (Very large database).
+
+9.MDX ,DMX & DAX
+
+
+Temporary Tables:
+------------------
+1.It is used to hold the information in logical memory but not in physical memory.
+
+2.They hold the data for a particular period of time but not permanently.
+
+3.sorting,grouping,filtering,joining..........
+
+
+
+ex1: Holds the data until transaction is closed.
+
+>create global temporary table temp(c1 date) on 
+commit delete rows;
+
+> insert into temp values(sysdate);
+> select * from temp;
+> commit
+select * from emp(norows)
+
+ex2: holds the data until session is closed
+
+>create global temporary table temp1(c1 date)
+on commit preserve rows;
+
+>insert into temp1 values(sysdate);
+select * from temp1 -- 3 rows
+commit
+select* from temp1 -- 3 rows
+exit
+select * from temp1 --0 row
+
+
+PROCEDURE AND FUNCTION USING POP(PROCEDURE ORIENTED PROGRAMMING)
+
+member function or member procedure (OBJECT ORIENTED PROGRAMING)
+1.OBJECT
+2.CLASS
+3.POLYMORPHISM
+4.DATA ABSTRACTION
+5.DATA ENCAPSULATION
+6.DYNAMIC BINDING
+7.MESSAGE PASSING
+8.INHERITANCE
+
+--java method
+
+class emp1
+{
+string ename;
+int eno;
+void putdata();
+}
+
+
+member1.sql
+
+create or replace type emp1 as object 
+(
+ename varchar2(20),
+eno number,
+member procedure putdata);
+/
+
+member2.sql
+
+create or replace type body emp1 as 
+member procedure putdata is
+begin
+dbms_output.put_line(ename);
+dbms_output.put_line(eno);
+end putdata;
+end;
+/
+
+--How to invoke emp1 object
+member3.sql
+
+declare 
+e1 emp1;
+e2 emp1;
+e3 emp1;
+begin
+e1:=emp1('gunasekaran',1001); --plsql constructor
+e2:=emp1('Jaswanth',1002); 
+e3:=emp1('Raj',1003);
+e1.putdata;
+e2.putdata;
+e3.putdata;
+end;
+/
+
+
+Oracle Collections:
+-------------------
+1.varray(5) 
+2.Nested Tables
+
+varray:
+
+A varying array is an array of variable length.Its maximum size is specified when declaring the array.
+
+syntax:
+
+create type <type_name> as varray(size) of datatype;
+
+
+create type itemcode as varray(5) of varchar2(5)
+/
+create type qty_ord as varray(5) of number(5)
+/
+create type qty_del as varray(5) of number(5)
+/
+
+create table order_detail(orderno varchar2(5),item_va itemcode,qty_va qty_ord,qtyd_va qty_del)
+/
+
+>desc order_detail
+
+> insert into order_detail values('c100',itemcode('i100','i101','i102','i103','i104'),
+qty_ord(100,98,49,39,20),qty_del(100,900,800,700,6000))
+/
+
+
+   
+NESTED TABLE:
+-------------
+
+NESTED TABLE is an Oracle data type used to support columns containing multivalued attributes, in this case, columns that can hold an entire sub-table. 
+
+
+Create a table with NESTED TABLE column: 
+
+CREATE OR REPLACE TYPE my_tab_t AS TABLE OF VARCHAR2(30);
+
+
+CREATE TABLE nested_table (id NUMBER, col1 my_tab_t) NESTED TABLE col1 STORE AS col1_tab;
+/
+
+SQL> desc nested_table;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ---------
+ ID                                                 NUMBER
+ COL1                                               MY_TAB_T
+
+SQL> 
+
+Insert data into table: 
+
+INSERT INTO nested_table VALUES (1, my_tab_t('A'));
+INSERT INTO nested_table VALUES (2, my_tab_t('B', 'C'));
+INSERT INTO nested_table VALUES (3, my_tab_t('D', 'E', 'F'));
+insert into nested_table values (4, my_tab_t('g','h','i','j'));
+insert into nested_table values (5, my_tab_t('a','b','c','d','e','f','g','h','i','j','k','l'));
+COMMIT;
+Select * from nested_table;
+
+SQL> SELECT * FROM nested_table;
+        ID COL1
+---------- ------------------------
+         1 MY_TAB_T('A')
+         2 MY_TAB_T('B', 'C')
+         3 MY_TAB_T('D', 'E', 'F')
+
+--How to update nested table column values?
+
+UPDATE nested_table SET COL1=my_tab_t('D', 'E') WHERE ID=2
+
+SELECT * FROM  NESTED_TABLE
+
+How to select column value from a nested table?
+
+ select t.*
+   from   nested_table p,
+         table (p.COL1) t
+/
+
+Assignment1:
+
+employee
+
+ename,eno,sal,allow allow_ty
+
+
+CREATE OR REPLACE TYPE emp_type AS TABLE OF number(4);
+
+CREATE TABLE emp_table (EMPNO  NUMBER, col1 emp_type)
+       NESTED TABLE col1 STORE AS col1_tab;
+
+/
+
+  1* insert into emp_table values (101,emp_type(100,200,300,400,400,500,600,6000,6000,4004,8949,849)
+SQL> /
+
+1 row created.
+
+SQL> select * from emp_table;
+
+     EMPNO
+----------
+COL1
+--------------------------------------------------------------------------------
+       101
+EMP_TYPE(100, 200, 300, 400, 400, 500, 600, 6000, 6000, 4004, 8949, 849)
+
+ 1* insert into emp_table values (101,emp_type(100,200,300,400,400,500,600,6000,6000,4004,8949,849)
+QL> /
+
+ row created.
+
+QL> select * from emp_table;
+
+    EMPNO
+---------
+OL1
+-------------------------------------------------------------------------------
+      101
+MP_TYPE(100, 200, 300, 400, 400, 500, 600, 6000, 6000, 4004, 8949, 849)
+
+
+QL> insert into emp_table values(102,emp_type(10,20,30,40,50,60,60,70,80,90,100,110,120,130,140,165
+);
+
+ row created.
+
+QL> desc emp_table;
+Name                                      Null?    Type
+----------------------------------------- -------- ----------------------------
+EMPNO                                              NUMBER
+COL1                                               EMP_TYPE
+
+Kindly find the nested table link:
+
+http://sql-plsql.blogspot.com/2007/05/oracle-plsql-nested-tables.html
+
+How to BULK insert multiple records in single table? (FAQ)
+
+INSERT ALL
+   INTO mytable VALUES ('val1', 'val1', 'val1')
+   INTO mytable VALUES ('val2', 'val2', 'val2')
+   INTO mytable VALUES ('val3', 'val3', 'val3')
+SELECT * FROM dual;
+
+
+
+drop table emp1;
+
+create table emp1(ename varchar2(20),eno number(5));
+
+insert all
+into emp1 values('aaa',101)
+into emp1 values('bbb',102)
+into emp1 values('ccc',103)
+into emp1 values('ddd',104)
+into emp1 values('aaa',101)
+into emp1 values('bbb',102)
+into emp1 values('ccc',103)
+into emp1 values('ddd',104)
+select * from dual;
+/
+
+NORMALIZATION:
+---------------
+	It is a process of splitting a single table into 2 or more sub tables to avoid redundancy and promote integrity.
+
+			OR
+	It is a process of deciding number of 
+tables required in a database, 
+columns in each table and relationships 
+among the tables is known as Normalization.
+
+	Noramlization is used to store the data in simple forms.
+
+Advantages of Normalization:
+1. Minimizes Redundancy
+2. Reduces Complexity
+3. Easy Maintainance
+4. Making tables ready to perform joins and sub queries.
+
+
+Insert,update,delete -> 
+
+A table can be normalized in different ways often called Normal Forms;
+
+1. First Normal Form (1NF)
+2. Second Normal Form (2NF)
+3. Third Normal Form (3NF)
+
+1. First Normal Form (1NF):
+
+	Tables are said to be in 1st Normal form 
+only when it satisfies the following rules;
+
+i. Isolate repeating column groups to other table by adding a common column.
+
+ii. Every Column should be atomic(very small).
+
+Insert/update/delete 
+
+2. Second Normal Form (2NF):
+
+i. Tables should be in 1NF
+ii. All Non key columns should be made dependent on whole key but not part of a key.
+
+
+3. Third Normal Form (3NF)
+
+i. Tables should be in 2NF
+ii. No Transitive Dependency.
+
+
+
+
+
+how to create a new table from existing table?
+
+create table <newtablename> as select * from <oldtablename>
+
+ex:
+
+create table emp1 as select * from emp;
+
+create table emp2 as select * from emp where deptno=20;
+
+create table emp3 as select ename,empno,sal deptno from emp;
+
+
+
+New date and time data types?
+
+CREATE TABLE date_table (
+  date1      DATE,
+  time1      TIMESTAMP,
+  time2      TIMESTAMP
+);
+
+insert into date_table values(sysdate,sysdate,sysdate);
+
+SELECT CAST(date1 AS TIMESTAMP) "Date" FROM date_table;
+
+Date
+---------------------------------------------------------------------------
+03-DEC-04 11.36.45.000000 AM
+
+
+
+
+NEW DATE FUNCTIONS:
+
+*SYSTIMESTAMP : GIVES DATE AND TIME INCLUDING FRACTIONAL SECONDS IN 
+SERVERTIMEZONE.
+
+CURRENT_TIMESTAMP : GIVES DATE AND TIME INCLUDING FRACTIONAL SECONDS IN CLIENT TIMEZONE.
+
+SYSDATE : GIVES ONLY DATE IN SERVER TIME ZONE.
+
+CURRENT_DATE : GIVES ONLY DATE IN CLIENT TIME ZONE.
+
+
+EXTRACT : IT IS USED TO RETERIVE A PARTICULAR VALUES FROM THE GIVEN DATE(DAY/MONTH/YEAR)
+
+TO_TIMESTAMP(DATE) : CONVERTS GIVEN DATE INTO DATE AND TIME INFORMATION WITH AM/PM.
+
+DBTIMEZONE : GIVES THE SERVERTIMEZONE VALUE
+
+TIMESTAMP : DATATYPE
+AUTOMATICALLY STORED DATE AND TIME INFORMATION WITH AM/PM
+
+
+>SELECT SYSTIMESTAMP,CURRENT_TIMESTAMP FROM DUAL;
+>SELECT SYSDATE,current_date from dual;
+>select dbtimezone from dual
+> select to_timestamp(sysdate) from dual
+> select extract(day from sysdate) from dual
+> select extract(month from sysdate) from dual
+> select extract(year from sysdate) from dual
+> create table temp(c1 timestamp)
+> insert into temp values(sysdate);
+> select * from temp
+New General Functions:
+---------------------
+
+* coalesce(exp1,exp2,exp3......)
+Picks the first not null expression result.
+
+> select coalesce(100+null,
+250-null+1000,12*null,255,2345,9888) from dual
+ans : 255
+* nullif (exp1,exp2)
+if exp1 and exp2 results are same it returns NULL value otherwise it return expr1 result
+
+>select nullif(100,50*2),nullif(300,30*100),nullif(600,300+300) from dual
+ans: null 300 null
+
+select roll,name,nullif(fee,2500) from student where course='oracle';
+
+*NVL2(EXP1,EXP2,EXP3)
+if exp1 is null it manipulates exp3
+iF exp1 is notnull it manipulates exp2.
+--EXAMPLE
+SELECT ENAME,EMPNO,SAL,NVL(COMM,0) FROM EMP;
+--if exp1 is null then return exp2 else exp1.
+SELECT ENAME,EMPNO,SAL,NVL2(COMM,COMM,0) FROM EMP
+--if exp1 is null then retune exp3 else exp2
+/
+
+emp(14) =>merge=>  empnew1(3) => 14 rows
+
+
+Merge (DML) (FAQ)
+------------
+* it is used to compare the 2 table contents and makes them equal.
+
+* it supports only update and insert.
+
+Note : 
+
+New records inserted 
+Old records updated
+
+merge
+into empnew1 t
+using EMP e
+on (t.EMPNO=e.EMPNO)
+when matched then
+update set t.ENAME=e.ENAME,
+T.SAL=E.SAL,
+T.COMM=E.COMM,
+T.MGR=E.MGR,
+T.JOB=E.JOB,
+T.DEPTNO=E.DEPTNO,
+T.HIREDATE=E.HIREDATE
+when not matched then
+insert values(E.EMPNO,E.ENAME,E.JOB,E.MGR,E.HIREDATE,E.SAL,E.COMM,E.DEPTNO) 
+
+/
+
+
+Regular Expression in 10G
+
+>select ENAME,EMPNO,SAL from emp where REGEXP_LIKE(ENAME,'S')
+>SELECT ename,REGEXP_INSTR(ENAME,'S') from emp
+>SELECT ename,REGEXP_REPLACE(ENAME,'S','G') from emp
+
+
+Read-Only Tables in Oracle Database 11g
+-----------------------------------------
+syntax:
+-------
+ALTER TABLE table_name READ ONLY;
+ALTER TABLE table_name READ WRITE;
+
+
+CREATE TABLE ro_tab (
+  id  NUMBER
+);
+
+INSERT INTO ro_tab VALUES (1);
+
+ALTER TABLE ro_tab READ ONLY;
+
+
+Creating Virtual Columns:
+-------------------------
+sql> CREATE TABLE t1 ( n1 INT,n2 INT ,n3 INT GENERATED ALWAYS AS (n1 + n2) VIRTUAL);
+
+SQL> INSERT INTO t1(n1,n2) VALUES (10, 20);
+
+sql> select * from t1;
+
+--How to create virtual column on existing tables?
+
+alter TABLE t1  add n4 INT GENERATED ALWAYS AS (n1 + n2) VIRTUAL;
+
+select * From t1
+
+--HOW TO KNOW HOW MANY VIRUTAL COLUMNS ARE AVAILABLE?
+
+SELECT column_name
+    ,      data_type
+    ,      data_default
+    FROM   user_tab_columns
+    WHERE  table_name = 'T1'
+    ORDER  BY
+           column_id
+/
+
+
+
+
+bulk collection with plsql
+
+
+create table bc (
+  a number, 
+  b varchar2(10)
+);
+
+insert into bc values (11,'abc');
+insert into bc values (12,'def');
+insert into bc values (13,'ghi');
+insert into bc values (14,'jkl');
+
+commit;
+
+An anonymous block is executed. Its declaration part defines two nested-table types and declares two variables, one of either type. In the body, the select statement used bulk collect to select all rows in the table in one go into the variables. Finally, a loop over the variables' elements prints the values. 
+set serveroutput on size 10000
+
+declare
+  type obj1 is table of bc.a%type;
+  type obj2 is table of bc.b%type;
+  x1 obj1;
+  x2 obj2;
+begin
+  select a, b bulk collect into x1,x2 from bc;
+
+  for i in x1.first .. x1.last loop
+    dbms_output.put_line(x1(i) || ', ' || x2(i));
+  end loop;
+
+end;
+/
+
+--example 2
+
+declare
+  type obj1 is table of emp.ename%type;
+  type obj2 is table of emp.sal%type;
+  x1 obj1;
+  x2 obj2;
+begin
+  select ename,sal bulk collect into x1,x2 from emp;
+
+  for i in x1.first .. x1.last loop
+    dbms_output.put_line(x1(i) || ', ' || x2(i));
+  end loop;
+
+end;
+/
+
+PIVOT and UNPIVOT
+---------------------
+
+The function PIVOT transposes rows in columns and the function UNPIVOT transposes columns in rows. 
+
+--example1
+
+WITH
+   T
+AS
+(
+   SELECT
+      DEPTNO,
+      JOB,
+      SAL
+   FROM
+      EMP
+)
+SELECT
+   *
+FROM
+   T
+PIVOT
+(
+   MIN(SAL) AS MINSAL,
+   MAX(SAL) AS MAXSAL
+FOR
+   (JOB)
+IN
+   (
+      'CLERK' AS CLERK,
+      'SALESMAN' AS SALES
+   )
+)
+ORDER BY
+   DEPTNO;
+
+UNPIVOT does the opposite operation. The columns are converted into rows:
+-------------------------------------------------------------------------
+SELECT
+   EMPNO,
+   ENAME,
+   PROPERTY,
+   VALUE
+FROM
+   EMP
+UNPIVOT
+EXCLUDE NULLS
+(
+   VALUE
+   FOR
+      PROPERTY
+   IN
+   (
+      SAL,
+      COMM
+   )
+)
+WHERE
+   DEPTNO=30;
+
+
+
+
+
+
+ Invisible columns in 12 c
+-----------------------------
+
+* Invisible columns in Oracle 12c provide the flexibility of adding columns to existing tables without the fear of breaking an application. 
+* Making a column invisible is a neat way to hide the existing columns within a table.
+
+--example
+
+drop table emp1;
+
+CREATE TABLE emp1 (eno number(6), ename varchar2(40), sal number(9) INVISIBLE);
+
+
+insert into emp1(eno,ename,sal) values(101,'xxx',2500);
+insert into emp1(eno,ename) values(102,'yyy');
+insert into emp1(eno,ename,sal) values(103,'zzz',3500);
+
+select * from emp1;
+
+--How to add invisible column in existing table?
+
+ALTER TABLE emp1 ADD TL VARCHAR2(20) INVISIBLE;
+
+
+
+Note: Invisible columns can be useful during application migrations. 
+
+* Making new columns invisible means they won't be seen by any existing applications, but can still be referenced by any new applications, making the online migration of applications much simpler.
+
+
+Oracle 12c Features:
+--------------------
+
+--How to select first 5 records in before 12c?
+
+select * from (select ename,empno,sal,deptno,mgr,comm,job,dense_rank() over(order by sal desc) as rank from emp) 
+where rank<=5
+
+--How to select first 5 records in 12c?
+
+SELECT * FROM   emp ORDER BY sal DESC FETCH FIRST 5 ROWS ONLY;
+
+--How to select 4th records to 8 th records?
+
+SELECT * FROM   emp
+ORDER BY sal DESC
+OFFSET 4 ROWS FETCH NEXT 4 ROWS ONLY;
+
+--How to select percentage of rows?
+
+SELECT * FROM   emp
+ORDER BY sal DESC
+FETCH FIRST 50 PERCENT ROWS ONLY;
+
+--How to select 50% percentage of rows after 4th rows?
+
+SELECT * FROM   emp
+ORDER BY sal DESC
+OFFSET 4 ROWS FETCH NEXT 50 PERCENT ROWS ONLY;
+
+LOB datatypes:
+--------------
+
+
+CREATE TABLE test (
+  office   NUMBER(6,0)  NOT NULL,
+  username VARCHAR2(10) NOT NULL,
+  iblob    BLOB         NOT NULL
+)
+
+INSERT INTO test  
+VALUES (100, 'Manoj', utl_raw.cast_to_raw('C:\it\oracle\manoj.jpg'));
+
+select * from test;

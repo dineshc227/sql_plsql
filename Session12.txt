@@ -1,0 +1,290 @@
+
+Mock test url path
+
+http://sqlschool.com/RTCS_SQL2.html
+
+			SUB-QUERIES
+			-------------
+ A Sub Query is also a query, which is defined under a main query.
+
+First Query is also called as outer query  or main query and second query is also called as inner query or subquery.
+
+It always sends values to its nearest main query. 
+
+Server first sub query executed based on the sub query value main query will get executed.
+
+If a sub query send single value to its nearest main query then that sub query is called Single--Valued-Sub query. ex: (select sum(sal) from emp)
+
+If a sub query sends multiple values to its nearest main query then that sub query is called Multi-Valued-Sub query.ex:(select sal from emp);
+
+Note: If a sub query sends multiple values to its nearest main query then we have to use IN or NOT IN operator between Main query and Sub query.
+
+Single valued/Row Subquery:
+-----------------------
+SELECT * FROM TABLENAME WHERE COLUMNNAME = 
+(SELECT STATEMENT WHERE CONDITION)
+
+Multi valued/row subquery:
+----------------------
+select * from tablename where columname in
+ (select statement where condition)
+
+Types of Subquery:
+------------------
+1.Nested Subquery / Uncorrelated Subquery
+	a.single valued/row subquery - where 
+	b.multi valued/row subquery  - where 
+	c.Multi column valued subquery - from
+2.Correlated Subquery
+
+
+
+
+
+-- display all emp details whose earning salary above avg.salary
+
+select * from emp where sal>=(select avg(sal) from emp)
+
+--display all emp details whose earning salary below avg.salary?
+select * from emp where sal <=(Select avg(Sal) from emp);
+
+
+--display all emp details whose earning first highest salary
+select * from emp where sal=(select max(sal) from emp)
+
+--display all emp details whose earning Second highest salary
+select * from emp where sal=(select max(sal) from emp where sal<(select max(sal) from emp))
+
+--display all emp details whose earning 3rd highest salary
+select * from emp where sal=(select max(sal) from emp where sal<(select max(sal) from emp
+where sal<(select max(sal) from emp)))
+
+--display all emp details whose earning nth highest salary where n=10
+
+select * from (select ename,empno,sal,deptno,mgr,comm,job,dense_rank() over(order by sal desc) as rank from emp) 
+where rank=10
+
+--display all emp details whose earning first 3 highest salary
+select * from (select ename,empno,sal,deptno,mgr,comm,job,dense_rank() over(order by sal desc) as rank from emp) 
+where rank<=3
+
+
+--display all emp details whose earning whose earning salary between 5 to 10th highest salary
+select * from (select ename,empno,sal,deptno,mgr,comm,job,dense_rank() over(order by sal desc) as rank from emp) e
+where rank between 5 and 10
+
+--5 to 10 and 12 to 14
+
+select * from (select ename,empno,sal,deptno,mgr,comm,job,dense_rank() over(order by sal desc) as rank from emp) e
+where rank between 5 and 10 or rank between 12 and 14
+
+
+--display all emp details whose earning least salary
+select * from emp where sal=(select min(sal) from emp)
+
+--display all emp details whose earning salary above avg.salary of deptno 10
+
+select * from emp where sal >=(select avg(sal) from emp where deptno=10)
+
+--display all emp details whose earning salary above avg.salary of deptno 20
+
+select * from emp where sal >=(select avg(sal) from emp where deptno=20)
+
+--display all emp details whose earning salary above avg.salary of deptno 30
+
+select * from emp where sal >=(select avg(sal) from emp where deptno=30)
+
+
+--display all emp details who are working along with smith dept
+select * from emp where deptno=(select deptno from emp where ename='Smith')
+
+--display smith's working deptname
+select dname from dept
+where deptno =(select deptno from emp where ename='SMITH')
+
+
+--To modify the smith salary to the highest salary and transer to ford job.
+
+update emp set sal=(Select max(sal) from emp),job=(select job from emp 
+where ename='FORD') where ename='SMITH'
+
+
+
+
+--To modify the smith salary to the 2nd highest salary and transer to ford job.
+
+update emp set sal=(select max(sal) from emp where sal <(Select max(sal) from emp)),
+job=(select job from emp where ename='ford') where ename='smith'
+
+
+	HYD
+ename	eno	salary
+aaa	101	10000
+bbb	102	20000
+ccc	103	30000
+ddd	104	40000
+eee	105	50000
+anil	101	35000
+guna	105	50000
+dheer	106	36900
+
+
+
+--how to select duplicate records
+select * from emp2 where ROWid not in(select min(ROWid) as min from emp2 group by eno)
+
+--how to delete duplicate records? (faq)
+delete from emp2 where ROWid not in(select min(ROWid) as min from emp2 group by eno)
+
+SELECT * FROM EMP2
+
+-- WAQ To display employee details, who are working under SMITH dept.
+select * from emp where deptno=(select deptno from emp where ename='smith')
+
+*SUB-Queries with Update command:
+
+* Update the employee salary to max-salary whose eno=7369
+
+update emp set sal=(Select max(sal) from emp) where empno=7369
+
+
+* UPDATE THE SMITH SALARY TO MAX-SALARY AND CHANGE JOB 'FORD'.
+
+update emp set sal=(select max(sal) from emp),job=(select job from emp where ename='Ford')
+where empno=7566
+
+--Display ename,job,sal of all those employees whose row position in even series records
+select * from (select ename,empno,sal,deptno,row_number() over(order by sal desc) as rn from emp) e
+where MOD(RN,2)=0
+
+--odd series rows
+select * from (select ename,empno,sal,deptno,row_number() over(order by sal desc) as rn from emp) e
+where MOD(RN,2)=1
+
+--4th series rows
+select * from (select ename,empno,sal,deptno,row_number() over(order by sal desc) as rn from emp) e
+where MOD(RN,4)=0
+--first records
+
+select * from (select ename,empno,sal,deptno,row_number() over(order by sal desc) as rn from emp) e
+where rn=1
+
+--5th to 10th records
+select * from (select ename,empno,sal,deptno,row_number() over(order by sal desc) as rn from emp) e
+where rn between 5 and 10
+
+--last records
+
+select * from (select ename,empno,sal,deptno,row_number() over(order by sal desc) as rn from emp) e
+where rn=(Select count(*) from emp)
+
+Multiple Row Subquery:
+
+When subquery returns multiple rows. It is called multiple row salary.
+Note: we should multiple row operators with multiple row subqueries. They are three multiple row operators.
+1.	IN = MATCHING
+2.	ANY <=MATCHING
+3.	ALL >=MATCHING
+
+
+
+EXAMPLE FOR ALL OPERATORS:
+--------------------------
+
+Select ENAME,EMPNO,SAL,DEPTNO from emp
+		Where sal > ALL
+(Select sal from emp Where deptno = 30)
+
+
+Ex: Select * from emp where sal < ALL(1600,2500,1250,3000,950);
+
+*ANY: Select * from emp where sal > ANY(select sal from emp                 where deptno = 30);	
+
+Select * from emp where sal < Any(select sal from emp where deptno = 30);
+
+*IN: Select * from emp where ename IN('ALLEN', 'KING','FORD');
+
+Select * from emp where sal IN(select sal from emp where deptno = 30);
+
+
+/
+select * from emp where sal  in(select sal from emp where deptno=30) --matching
+select * from emp where sal >=all(select sal from emp where deptno=30)  --above matching
+select * from emp where sal <=any(select sal from emp where deptno=30) --below matching
+select * from emp where sal in(1600,1250,2850,1500,950)  --matching
+select * from emp where sal >=all(1600,1250,2850,1500,950) --above matching
+select * from emp where sal <=any(1600,1250,2850,1500,950) --below matching
+
+
+
+
+Types of Subquery:
+--------------------
+1.Nested Subquery --  Table level execution - static value
+2.Correlated Subquery -- Row level execution -dynamic value
+
+--display all emp details whose earning salary
+above avg.salary of deptno 10.(2916)
+
+--display all emp details whose earning salary
+above avg.salary of deptno 20. (2175)
+
+--display all emp details whose earning salary
+above avg.salary of deptno 30. (1566)
+
+--client requirement
+
+--display all emp details whose earning salary
+above avg.salary of respective dept or him dept or her dept.
+
+select ename,empno,sal,deptno from emp e
+where sal>=(select avg(sal) from emp where deptno=e.deptno);
+
+
+
+
+
+CORRELATED SUB QUERIES: (ROW BY ROW)
+------------------------------------
+
+SELECT ENAME,EMPNO,SAL,DEPTNO FROM EMP e  WHERE SAL >=
+(SELECT AVG(SAL) FROM EMP WHERE DEPTNO=e.deptno)
+
+Correlated Subquery:
+
+	These queries provide different execution to nested query, where it first executes Outer query and then executes inner query.
+
+	Nested query is called uni-directional query whereas Corelated Sub Query is called bi-directional query.
+
+	Corelated Sub Query will always gets executed in the following way;
+	"First outer query gets executed, extracts 1 row at a time(candidate row) and that row is given to inner query for processing, inner query will provide its output to outer query and based on the condition outer query will display the extracted record".
+
+--Example:
+---------
+10 - 2916
+20 - 2073
+30 - 1566
+
+--display all emp details whose earning salary above avg.salary of respective dept or him dept or her dept.
+
+10 - 2916
+20 - 2073
+30 - 1566
+
+
+
+select ename,empno,sal,deptno,mgr from emp e where sal>=
+(select avg(sal) from emp where deptno=e.deptno)
+
+
+--display max salary for each dept and corresponding emp details
+select * from emp e where sal=(select max(sal) from emp where deptno=e.deptno)
+
+--display min salary for each dept and corresponding emp details
+select * from emp e where sal=(select min(sal) from emp where deptno=e.deptno)
+
+
+--display all emp details whose earning salary nth highest salary where n=10
+select * from emp e where 10=(select count(distinct (sal)) from emp where sal>=e.sal)
+
+

@@ -1,0 +1,465 @@
+package:
+--------
+1.Package is a collection of procedures,functions,cursors,exceptions,variables and constants.
+
+2.it is stored in "user_source" system table.
+
+3.it can be shared with other users.
+
+grant execute on <package_name> to <username>;
+
+4.The will improve performance of oracle while accessing sub programs from client environment.
+
+5.They support oops featues:
+a.object
+b.class
+c.inheritance
+d.polymorphism
+e.data abstraction
+f.data encapsulation
+g.dynamic binding
+h.message passing.
+
+
+
+
+Advantages of PL/SQL Packages
+
+1.modularity
+
+2.Easier application design
+
+3.Information hiding
+
+4.Added functionality
+
+5.Better performance.
+
+
+
+package creation
+
+1.package declaration
+
+2.package body defination
+
+3.package calling
+
+
+1.syntax:
+
+create or replace package <package_name> is
+<local declaration>
+begin
+<executable statements>;
+end <package_name>;
+
+2.package body defination
+
+create or replace package body <package_name> is
+<localdeclaration>
+begin
+<statement1>;
+<statement2>;
+end <package_body_name>;
+
+
+
+3.package calling 
+
+select <package_name>.function_name();
+exec <package_name>.procedure_name();
+
+
+pack1.sql
+
+create or replace package gowtham_pack is
+procedure add(a number,b number);
+procedure sub(a number,b number);
+function mul(a number,b number) return number;
+function div(a number,b number) return number;
+function Average(a number,b number) return number;
+end gowtham_pack;
+/
+
+
+PACK2.SQL
+
+CREATE OR REPLACE PACKAGE BODY gowtham_pack IS
+PROCEDURE ADD(A NUMBER,B NUMBER) IS
+C NUMBER;
+BEGIN
+C:=A+B;
+DBMS_OUTPUT.PUT_LINE('ADD TWO VALUES='||C);
+END ADD;
+PROCEDURE SUB(A NUMBER,B NUMBER) IS
+C NUMBER;
+BEGIN
+C:=A-B;
+DBMS_OUTPUT.PUT_LINE('SUB TWO VALUES='||C);
+END SUB;
+FUNCTION MUL(A NUMBER,B NUMBER) RETURN NUMBER IS
+C NUMBER;
+BEGIN
+C:=A*B;
+RETURN C;
+END MUL;
+FUNCTION DIV(A NUMBER,B NUMBER) RETURN NUMBER IS
+C NUMBER;
+BEGIN
+C:=A/B;
+RETURN C;
+END DIV;
+FUNCTION AVERAGE(A NUMBER,B NUMBER) RETURN NUMBER IS
+C NUMBER;
+BEGIN
+C:=(A+B)/2;
+RETURN C;
+END AVERAGE;
+END gowtham_pack;
+/
+
+PACK3.SQL
+
+DECLARE
+A NUMBER;
+B NUMBER;
+C NUMBER;
+D NUMBER;
+AV NUMBER;
+BEGIN
+A:=&A;
+B:=&B;
+gowtham_pack.ADD(A,B);
+gowtham_pack.SUB(A,B);
+C:=gowtham_pack.MUL(A,B);
+D:=gowtham_pack.DIV(A,B);
+AV:=gowtham_pack.AVERAGE(A,B);
+DBMS_OUTPUT.PUT_LINE('MUL VALUES='||C);
+DBMS_OUTPUT.PUT_LINE('DIV VALUES='||D);
+DBMS_OUTPUT.PUT_LINE('AVERAGE VALUES='||AV);
+END;
+/
+
+
+
+
+PACK4.SQL
+
+CREATE OR REPLACE PACKAGE RDBMS_OUTPUT IS
+PROCEDURE PRINT_LINE(N VARCHAR2);
+END RDBMS_OUTPUT;
+/
+
+PACK5.SQL
+
+CREATE OR REPLACE PACKAGE BODY RDBMS_OUTPUT IS
+PROCEDURE PRINT_LINE(N VARCHAR2) IS
+BEGIN
+DBMS_OUTPUT.PUT_LINE(N);
+END PRINT_LINE;
+END RDBMS_OUTPUT;
+/
+
+
+P1.SQL
+
+/* write a plsql program to calculate all arithmetical operators */ 
+
+declare
+a number;
+b number;
+c number;
+d number;
+e number;
+f number;
+begin
+a:=&a;
+b:=&b;
+c:=a+b;
+d:=a-b;
+e:=a*b;
+f:=a/b;
+rdbms_output.print_line('add two values='||c);
+rdbms_output.print_line('sub two values='||d);
+rdbms_output.print_line('mul two values='||e);
+rdbms_output.print_line('div two values='||f);
+end;
+/
+
+--example3
+
+CREATE or REPLACE PACKAGE pkg1
+	IS 
+PROCEDURE pro1(no in number, name out varchar2);
+FUNCTION fun1(no in number) RETURN varchar2;
+function fun2(gr in number) return number;
+	END;
+/
+
+--package body 
+
+CREATE or REPLACE PACKAGE BODY pkg1
+IS
+PROCEDURE pro1(no in number, name  out varchar2)
+		IS
+		BEGIN
+SELECT ENAME INTO name FROM emp WHERE empno =no;
+		END;	
+FUNCTION fun1(no in number) return varchar2
+		IS
+		name varchar2(20);
+		BEGIN
+SELECT dname INTO name FROM dept WHERE deptno = no;
+			RETURN name;
+		END;
+function fun2(gr in number) return number
+is
+los number;
+begin
+select losal into los from salgrade where grade=gr;
+return los;
+end;
+END pkg1;
+/
+
+
+
+--How to invoke package?
+DECLARE
+	no number := &empno;
+	dno number:= &dno;
+	gr number:=&grade;
+	name varchar2(20);
+        info varchar2(20);
+	lo number;
+BEGIN
+	pkg1.pro1(no,info);
+	RDBMS_output.print_line('Procedure Result');
+	RDBMS_output.print_line(info);
+	RDBMS_output.print_line('Function1 Result');	                     
+	name := pkg1.fun1(dno);
+	RDBMS_output.print_line(name);
+    rdbms_output.print_line('Function 2 Result:');
+	lo:=pkg1.fun2(gr);
+	rdbms_output.print_line(lo);
+	
+END;
+/	
+
+--example 4
+
+CREATE OR REPLACE PACKAGE personnel AS
+  
+  FUNCTION get_fullname(n_emp_id NUMBER)
+    RETURN VARCHAR2;
+  
+  FUNCTION get_salary(n_emp_id NUMBER)
+    RETURN NUMBER;
+
+END personnel;
+/
+
+
+--package body
+
+CREATE OR REPLACE PACKAGE BODY personnel AS
+    FUNCTION get_fullname(n_emp_id NUMBER) RETURN VARCHAR2 IS
+      v_fullname VARCHAR2(50);
+  BEGIN
+    SELECT ename  || ',' ||  job||','||MGR
+    INTO v_fullname
+    FROM emp
+    WHERE empno = n_emp_id;
+ 
+    RETURN v_fullname;
+ 
+  EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN NULL;
+  WHEN OTHERS THEN
+	RETURN NULL;
+    END; 
+  
+  FUNCTION get_salary(n_emp_id NUMBER) RETURN NUMBER IS
+    n_salary NUMBER(8,2);
+  BEGIN
+    SELECT sal
+    INTO n_salary
+    FROM emp    WHERE empno = n_emp_id;
+ 
+    RETURN n_salary;
+ 
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        RETURN NULL;
+      WHEN OTHERS THEN
+	RETURN NULL;
+      
+  END;
+END personnel;
+
+/
+
+
+--how to invoke package
+
+DECLARE
+  n_salary NUMBER(8,2);
+  v_name   VARCHAR2(50);
+  n_emp_id NUMBER := &emp_id;
+BEGIN
+ 
+  v_name   := personnel.get_fullname(n_emp_id);
+  n_salary := personnel.get_salary(n_emp_id);
+ 
+  IF v_name  IS NOT NULL AND
+    n_salary IS NOT NULL
+  THEN
+    dbms_output.put_line('Employee: ' || v_name);
+    dbms_output.put_line('Salary:' || n_salary);
+  END IF;
+END;
+/
+
+
+package with "Function-overloading features":
+------------------------------------------
+
+OVERLOADING REFERS TO THE USE OF THE SAME THINGS FOR DIFFERENT PURPOSE.
+
+ORACLE PACKAGE SUPPORTS THE OOPS CONCEPT.
+
+THIS IS KNOWN AS FUNCTION POLYMORPHISM IN OOPS.)
+
+add(int,int)
+add(float,float)
+add(char,char)
+add(long,int)
+add(char,int)
+add(int,int) //invalid
+
+
+Note: We are created group of add() with one function name but with argument list different.
+
+* The correct function to be invoked is determined by checking the number and type of arguments.
+
+
+
+create or replace package load_pack as
+function add_data(a number,b number) return number;
+function add_data(a varchar2,b varchar2) return varchar2;
+function add_data(a varchar2,b number) return varchar2;
+end load_pack;
+/
+
+create or replace package body load_pack as
+function add_data (a number,b number) return number is
+begin
+return(a+b);
+end add_data;
+function add_data(a varchar2,b varchar2) return varchar2 is
+begin
+return(a||' '||b);
+end add_data;
+function add_data(a varchar2,b number) return varchar2
+is
+begin
+return(a||'  '||b);
+end add_data;
+end load_pack;
+
+--How to invoke package?
+
+select load_pack.add_data(100,200) from dual
+select load_pack.add_data('sql','sandesh') from dual
+select load_pack.add_data('sql',100) from dual
+
+Types of Cursor:
+-----------------
+1.Implicit Cursor - select * from tablename;
+2.Explicit Cursor - 4 steps
+3.Parameterized Cursor - Nested loop
+4.REF Cursor - DYNAMIC CURSOR - PLSQL package (FAQ)
+
+exec p1(a number,b number,c varchar2)
+
+
+
+REF CURSOR: (FAQ)
+-----------
+
+1.DYNAMIC CURSOR.
+
+2.SUPPORTS TO DEFINE THE CURSOR WITHOUT SELECT STATEMENT.
+
+3.SELECT STATEMENT WILL BE PROVIDED WHILE "OPENING" CURSOR.
+
+4.IT IS USED TO SEND CURSOR AS AN PARAMETER IN SUBPROGRAMS.
+
+5.MADE EASY TO TRANSFER HUGE DATA THROUGH SUB PROGRAMS.
+
+SYNTAX:
+
+TYPE <REF_CURSOR_NAME> IS REF CURSOR;
+
+PACK14.SQL
+
+CREATE OR REPLACE PACKAGE PACK1 AS
+TYPE RCUR IS REF CURSOR;
+END PACK1;
+/
+
+P1.SQL
+
+CREATE OR REPLACE PROCEDURE GET_ROWS(VDEPT NUMBER,
+VCUR OUT PACK1.RCUR) IS
+BEGIN
+OPEN VCUR FOR SELECT EMPNO,ENAME,SAL,JOB FROM EMP WHERE DEPTNO=VDEPT;
+END;
+/
+
+P2.SQL
+DECLARE
+PCUR PACK1.RCUR;
+VENO NUMBER(4);
+VNAME VARCHAR2(20);
+VSAL NUMBER(12,2);
+VJOB VARCHAR2(20);
+DNO NUMBER:=&DNO;
+BEGIN
+GET_ROWS(DNO,PCUR);
+DBMS_OUTPUT.PUT_LINE('EMPLOYEE DETAILS ARE');
+LOOP
+FETCH PCUR INTO VENO,VNAME,VSAL,VJOB;
+EXIT WHEN PCUR%NOTFOUND;
+DBMS_OUTPUT.PUT_LINE(VENO||'   '||VNAME||'   '||VSAL||'   '||VJOB||'   '||DNO);
+END LOOP;
+CLOSE PCUR;
+END;
+
+
+/
+
+system table : user_source
+
+>desc load_pack;
+>select load_pack.add_data(5453,5675) total,load_pack.add_data('guna','SAI') name from dual
+
+Removing package :
+> drop package package_name;
+
+sharing package
+> grant execute on load_pack to user1;
+
+To view the existing package body
+
+> select text from user_source where 
+name='pack1';
+
+
+
+
+
+
+

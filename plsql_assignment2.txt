@@ -1,0 +1,59 @@
+1.Write a program to accept the annual income of the emp and find the income tax
+i) If the annsal > 60000 then tax is 10% of income
+ii) If the annsal > 100000 then tax is Rs 800+16% of income
+iii) If the annsal > 140000 then tax is Rs 2500+25% of income
+
+2.WAP to accept a year as i/p & find how many even number present in that year
+
+3.WAP to accept the emp details and calculate the bonus based on the following conditions
+i) If sal < 500 then bonus is 10% sal
+ii) If sal > 3500 then bonus is 12% sal
+iii) If sal > 1000 then bonus is 13.5% sal
+
+4.WAP to accept the empno and display ename,sal,hiredate and calculate ta,da,hra,lic,gross,exp and
+print all emp details. ta is 30% of sal,da is 20% of sal,hra is 15% of sal,lic is 5% of sal
+
+5.WAP to accept the item no ,item name,qty,unit price and calculate the bill If the bill > 500 then give discount 2% of bill amount and display the details
+
+6.WAP to accept a empno and display empno,name,sal,exp,dname,grade and loc.
+
+7.WAP to accept a empno and display empno,based on experience calculate the bonus and store it into the bonus table
+If exp > 5 years then bonus is 1 month salary
+If exp between 5 and 9 years then bonus is 20% of annual salary
+If exp more than 9 years then bonus is 1 month sal plus 25% of annual salary.
+find the bonus table.
+
+	Bonus
+ename	job	sal	comm
+
+8.WAP to accept the empno, based upon the dname transfer the emps ie, make the changes in the emp table. Transfer the emps from Accounting dept to Research, Research dept to Operation, Opertion dept to Sales
+and Sales to Accounting dept.
+
+9.WAP to accept the empno and print all the details of emp,dept and salgrade.
+
+10.WAP to accept the empno and display the exp with minimum 3 decimal places.
+
+11.WAP to display "GOOD MORNING" or "GOOD AFTERNOON" or "GOOD NIGHT" depending upon the current time.
+
+12.WAP to accept the mgr and find how many emps are working under that mgr.
+
+13.Write a program to accept a year and display the emps belongs to that 
+year?
+
+
+14.Write a program to accept the location and display empno, name, sal , date of join and also display the total salary, avg salary and no of emps?
+
+15.Write a procedure to accept the deptno as parameter and display the details of that dept also display the total salary, no of employees, max sal and avg sal?
+
+16.Write a function to accept the empno and return exp with minimum 3 decimal?
+
+17.Write a database trigger halt the transaction on Sunday on Bank_Master table.
+
+18.Write a database trigger halt the transaction between the the time 6pm to 10am on table emp
+
+19.Write a database trigger stroe the username ,type of transaction ,date of transaction and time of transaction of table emp into the table EMP_LOG
+
+20.Write a database trigger display the message when the inserting hiredate is greater than system date
+
+
+

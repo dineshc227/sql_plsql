@@ -1,0 +1,43 @@
+1. How will you convert date into string in oracle database?
+
+
+
+2 What is Save Points in Oracle database?
+
+SAVEPOINT is a TCL (Transaction Control Language) statement that creates a break point as a specified location in the current transaction. A transaction can be partially rolled back to any one of the savepoints.
+
+3. How do you find current date and time in oracle?
+
+SELECT TO_CHAR(SYSDATE, 'DD-MON-YYYY HH:MI:SS') FROM dual
+
+4. Difference between VARCHAR and VARCHAR2 data types?
+
+varchar(2000) - Variant length char - 1 byte - Ascii - Dynamic memory allocatin - ANSI syntax
+
+varchar2(4000) - Variant length char - 1 byte - Ascii - Dynamic memory allocation - Oracle syntax
+
+
+5.What is the use of NVL function with an example.
+nvl function is used to replace the null value with another value
+select ename,empno,sal,comm,sal+nvl(comm,0) as total from emp
+
+6. How do we display rows from the table without duplicates?
+
+select distinct(deptno) from emp
+select distinct(job) from emp
+
+7.What is the data type of DUAL table?
+
+The DUAL table is a special one-row, one-column table present by default in Oracle and other database installations
+
+8.What is the use of Aggregate functions in Oracle?
+
+
+
+9.What are the datatypes a available in PL/SQL?
+
+
+
+10.Explain DDL commands
+create,alter,truncate,drop,rename
+

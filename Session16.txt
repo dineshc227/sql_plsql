@@ -1,0 +1,82 @@
+Locking :
+----------
+* Locks are the mechanisms used to prevent destructive interaction between users and accessing the same resource simulatensouly.
+
+* A resource can either be an entire table or a specific row in a table.
+
+
+* Locks can be acquired at two different levels.
+
+a.Row level lock(For specific rows)
+b.Table level lock (For entire table)
+
+
+Row level locks:
+---------------
+Dhinesh USER
+-------------------------------------------------------------------------
+1. select * from emp where deptno=10;  --shared lock
+
+2. update emp set sal=sal+100 where deptno=10; --Exclusive lock
+
+
+--how to relase the lock?
+
+5.commit / rollback
+
+
+Ahmed USER:
+-------------------------------------------------------------------------
+
+3.SELECT * from dhinesh.emp where deptno=10 --valid
+
+4. update dhinesh.emp set sal=sal+100 where deptno=10 --invalid
+
+
+
+Table Level locks:
+------------------
+* A table level lock will protect the whole table data.
+
+We have 2 types of locks:
+------------------------
+a.Shared lock -- select
+B.exclusive lock - insert,delete,update
+
+syntax:
+
+Lock table <tablename> in share/exclusive mode;
+
+sql> lock table emp in share mode; (select)
+
+sql> lock table emp in exclusive mode; (insert,delete,update)
+
+--how to relase the lock?
+
+sql> commit / rollback;
+
+--How to know howmany locks are occured?
+
+declare
+ BEGIN
+    dbms_output.enable(1000000);
+    for do_loop in (select session_id, a.object_id, xidsqn, oracle_username, b.owner owner,
+   b.object_name object_name, b.object_type object_type
+    FROM v$locked_object a, dba_objects b
+   WHERE xidsqn != 0
+    and b.object_id = a.object_id)
+   loop
+    dbms_output.put_line('.');
+   dbms_output.put_line('Blocking Session : '||do_loop.session_id);
+   dbms_output.put_line('Object (Owner/Name): '||do_loop.owner||'.'||do_loop.object_name);
+   dbms_output.put_line('Object Type : '||do_loop.object_type);
+   for next_loop in (select sid from v$lock
+   where id2 = do_loop.xidsqn
+   and sid != do_loop.session_id)
+   LOOP
+   dbms_output.put_line('Sessions being blocked : '||next_loop.sid);
+   end loop;
+   end loop;
+   END;
+   /
+

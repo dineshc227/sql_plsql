@@ -1,0 +1,448 @@
+constraints: (Condition)
+--------------------------
+	Train_master
+train_no	train_name
+2655		apexpress
+2655		charminarexpress
+2655		chennai express
+
+	student
+sname	sno	mark (0 to 100)
+
+
+		emp1
+ename	empno (pk)	gender(m/f)	salary(20000 to 50000) DOJ(Monday TO Friday) panno number(10),Aadhar number(12)
+
+Constraints:
+------------
+1.it is used to controlling the data in a table.
+
+2.it is used to prevent the invalid data entry into table.
+
+3.it also used to maintain the security of the table.
+
+4.it is used to implement the business rule.
+or 
+The Process or enforcing the business rules on database tables is called "Data Integrity".
+
+There are two types of data integrity:
+
+1.Predefined integrity [constraints]
+2.User defined integrity [ Database triggers]
+
+oracle supports 3 types of Integrirty constriants:
+----------------------------------------
+1.Domain Integrity Constraints
+2.Entity Integrity Consraints
+3.Referential Integrity Constraints
+
+Domain Integrity Constraints:
+----------------------------
+1.check constraints
+2.not null constraints
+3.default constraints
+
+Entity Integrity Constraints:
+----------------------------
+a.primary key constraints
+b.unique key constraints
+
+3.Referential integrity constraints:
+-------------------------------------
+a.foreighn key constraints
+
+check Constratins:
+------------------
+* is used to validate the data based on the condition.
+
+MARK => 0  to 100
+salary => 20000 to 50000
+gender => m/f
+ttype = > cr/db
+doj => Monday to Friday
+pan card => 10 digits
+passport => 8 digits
+Aadhar => 12 digits
+
+Not null constraints:
+---------------------
+* it does not allow null values.
+
+* it accept duplicate values.
+
+Default Constraints:
+--------------------
+* Oracle insert some default values.
+
+PRIMARY KEY CONSTRAINTS: (unique + not null)
+---------------------------------------------
+1.A COLUMN DECLARED WITH PRIMARY KEY DOESNOT ALLOW DUPLICATES AND NULL VALUES.
+
+2.A COLUMN DECLARED WITH PRIMARY KEY, UNIQUELY IDENTIFIES EACH RECORD IN A TABLE.
+
+3.A TABLE ALLOWS ONLY ONE PRIMARY KEY.
+
+4. NUMERIC COLUMNS ARE PREFERED AS PRIMARY KEYS THAN CHARACTER COLUMNS.
+
+UNIQUE KEY CONSTRAINTS:
+
+1.UNIQUE DOESNOT ALLOW DUPLICATE VALUES.
+
+2.it accepts  null values.
+
+3.A table allow more than one unique key.
+
+
+Constraint syntax:
+
+fieldname fieldtype constraint <constraint_name> <constraint_type>
+
+--Example1
+
+	student
+
+sname	sno	mark(0 to 100)
+
+create table student(
+sname varchar2(20),
+sno number(3),
+mark number(3) constraint student_c1_mark check(mark between 0 and 100));
+
+
+insert into student values('aaa',101,99);  --valid
+insert into student values('bbb',102,100);  --valid
+insert into student values('ccc',103,101); --invalid
+
+select * from student --2 rows
+
+
+			emp2
+
+ename	empno(pk) gender (m/f)	salary (20000 to 50000) pan number(10) Aadhar number (12)
+
+drop table emp2;
+
+
+create table emp2(
+ename varchar2(10),
+empno number(4) constraint emp2_c1_empno primary key,
+gender char(1) constraint emp2_c2_gender check(gender in('m','f','M','F')),
+salary number(5) constraint emp2_c3_salary check(salary between 20000 and 50000),
+panno varchar2(10)constraint emp2_c4_panno check(length(panno)=10) unique not null,
+Aadhar number(12) constraint emp2_c5_Aadhar check(length(Aadhar)=12) unique not null);
+
+insert into emp2 values('kumar',1002,'m',35000,'aaaaa10001')
+
+select * from emp2
+
+
+Not null constraints:
+---------------------
+
+* it does not allow null values.
+
+* it accept duplicate values.
+
+DROP TABLE EMP3;
+
+create table emp3(ename varchar2(20),eno number(4) constraint emp3_c1_eno not null,salary number(5));
+/
+
+
+insert into emp3 values('aaa',1001,20000); --valid
+insert into emp3 values('bbb',null,35000); --invalid
+
+
+Unique constraints:
+------------------
+* it does not allow duplicate values.
+
+* it accept null values.
+
+* Each and every table we can create more than one uniquey key.
+
+--example
+drop table emp4;
+
+
+create table emp4(
+ename varchar2(20) constraint emp4_c1_ename unique,
+eno number(4) constraint emp4_c2_eno unique,
+salary number(5));
+
+insert into emp4 values('aaa',101,25000)
+insert into emp4 values('bbb',null,45000)
+insert into emp4 values('chandra',null,45000)
+insert into emp4 values('kumar',null,50000)
+
+--example2
+
+create table emp4(ename varchar2(20),
+empno number(3) constraint emp4_c1_empno not null unique  check(empno between 100 and 200),
+salary number(5))
+insert into emp4 values('xxx',101,25000)
+insert into emp4 values('xxx',101,25000)
+insert into emp4 values('xxx',null,25000)
+insert into emp4 values('xxx',201,25000)
+
+
+create table emp6(ename varchar2(20),empno number(4) constraint emp6_c1_empno
+unique not null,salary number(6))
+
+select * from emp4
+
+Default constarints:
+--------------------
+oracle insert some default values.
+
+--example1
+	emp5
+ename	empno	org	salary
+aaa	1001	unisys	25000
+bbb	1002	unisys	35000
+ccc	1003	unisys	45000
+
+create table emp5(
+ename varchar2(10),
+empno number(4),
+org varchar2(10) default 'unisys',
+salary number(5))
+
+insert into emp5(ename,empno,salary) values('aaa',101,25000);
+insert into emp5(ename,empno,salary) values('bbb',102,35000);
+insert into emp5(ename,empno,salary) values('ccc',103,45000);
+
+select * from emp5;
+insert into emp5 values('raj',104,'Infosys',45000);
+
+
+create table emp_entry(eid number(4) ,in_time timestamp default sysdate);
+
+insert into emp_entry(eid) values(1001);
+
+insert into emp_entry(eid) values(1005);
+
+
+
+sql>create table emp6(ename varchar2(20),eno int constraint c3_eno primary key,org varchar2(10) default 'UNISYS',SALARY INT);
+
+insert into emp5(ename,eno,salary) values('aaa',1001,25000);
+
+insert into emp5(ename,eno,salary) values('bbb',1002,35000);
+
+
+	order_master
+orderdate	orderno
+10-APR-19	1
+10-APR-19	2
+10-MAY-19	1
+10-MAY-19 	2
+31-MAY-19	1
+01-JUN-19	1
+13-JUN-19 	1
+13-JUN-19 	2
+14-JUN-19	1
+25-06-19		1
+25-06-19		2
+26-06-19		1
+
+
+
+
+create table order_master(
+orderdate date,
+orderno number(4),constraint ordermaster_c1 primary key(orderdate,orderno))
+/
+
+
+composite primary key (FAQ)
+-----------------------
+
+	Multiple columns set with single primary key constraint refers to Composite Primary Key.
+
+	Composite Primary Key can be created only at columnlevel or Table Level.
+
+	Behaviour of Composite Primary Key is that it will allow to store duplicates at 1 column only when corresponding column contains unique data. It will not allow to store null values.
+
+	Composite primary key can be set to Min 2 Cols and Max of 16 Columns.
+
+
+
+CREATE TABLE ORDER_MASTER(ORDERDATE DATE,ORDERNO NUMBER(4),CONSTRAINT ORDER_MASTER_C1_ORDER PRIMARY KEY(ORDERDATE,ORDERNO))
+
+INSERT INTO ORDER_MASTER VALUES('05-03-19',1);
+INSERT INTO ORDER_MASTER VALUES('05-03-19',2);
+INSERT INTO ORDER_MASTER VALUES('05-03-19',3);
+INSERT INTO ORDER_MASTER VALUES('06-03-19',1);
+
+SELECT * FROM  ORDER_MASTER
+
+
+		Train_Reservation
+
+train_no	coachno		seatno
+2655		s1		1
+2655		s1		2
+2655		s1		3
+2655		s2		1
+2655		s2		2
+2656		s1		1
+
+
+create table Train_Reservation(train_no number(5),coachno varchar2(3),seatno number(3),CONSTRAINT C1 primary key(train_no,coachno,seatno));
+
+--how to know howmany constraints are created?
+
+select * from user_constraints where table_name='EMP3'
+
+SELECT * FROM EMP3
+ALTER TABLE EMP3 ADD CONSTRAINT EMP3_C2_SALARY CHECK(SALARY BETWEEN 20000 AND 50000)
+ALTER TABLE EMP3 ADD CONSTRAINT EMP3_C3_ENO PRIMARY KEY(ENO)
+
+
+
+Foreign key constraints:
+-----------------------
+* is used to create parent child relationship between 2 or many tables.
+
+* it accept duplicate values and null values.
+
+* it always refers to primary key column / Unique key of the parent table.
+
+* After create relationship parent table records cannot be deleted.
+
+Types of Relationships
+-----------------------
+one to one
+one to many
+many to one
+many to many => Table level constraints
+
+
+
+syntax:
+
+fieldname fieldtype, Constraint <constraint_name> 
+foreign key(childtablefieldname) references 
+<parentablename>(parenttablecolname);
+
+
+
+		dept1 (parent table)
+deptno (pk)	dname	loc
+10		admin	che
+20		hr	hyd
+30		it	hyd
+40		sys	hyd
+
+
+
+		emp1 (child table)
+ename	empno	deptno (fk)	salary
+aaa	1001	10		25400
+bbb	1002	10		35000
+ccc	1003	20		25000
+ddd	1004	null		30000
+
+
+
+
+drop table dept1;
+
+drop table emp1;
+
+create table dept1(deptno number(2) constraint dept1_c1_deptno primary key ,dname varchar2(20),loc varchar2(20));
+
+insert into dept1 values(10,'admin','che');
+insert into dept1 values(20,'hr','hyd');
+insert into dept1 values(30,'it','hyd');
+insert into dept1 values(40,'sys','hyd');
+
+
+
+create table emp1(ename varchar2(20),empno number(4) ,deptno number(2),constraint emp1_c1_deptno foreign key(deptno)  references dept1(deptno),salary number(5));
+
+insert into emp1 values('aaa',1001,10,20000) --valid
+insert into emp1 values('bbb',1002,10,30000) --valid
+insert into emp1 values('ccc',1003,null,30000) --valid
+insert into emp1 values('ddd',1004,60,3000) --invalid
+
+select * from emp1;
+
+create table salary(ename varchar2(20),empno number(4) ,deptno number(2),constraint salary_c1_deptno foreign key(deptno)  references dept1(deptno),salary number(5));
+
+
+insert into emp1 values('aaa',101,10,25000);
+insert into emp1 values('bbb',102,10,34000);
+insert into emp1 values('ccc',103,20,45000);
+insert into emp1 values('ddd',104,30,45000);
+
+select * from emp1;
+
+
+Assignment:
+----------
+
+			bank_master
+		accno(pk)	balance
+		1001		10000
+		1002		20000
+		1003		30000
+		1004		40000
+		1005		50000
+
+		bank_transaction
+cname	accno(fk)	ttype	amount
+xxx	1001		db	35000
+yyy	1003		db	45000
+xxx	1001		cr	4555
+yyy	1003		db	35000
+zzz	1006		db	3500  --INVALID
+
+
+create table bank_master (accno number(4) constraint c1_accno primary key,balance number(5));
+
+
+
+create table bank_transaction(cname varchar2(10),
+accno number(5),constraint c2_accno foreign key(accno) 
+references bank_master(accno),amount number(5));
+
+
+
+One to many relationship:
+------------------------
+drop table emp2;
+
+create table salary(ename varchar2(20),
+deptno number(2),constraint c4_deptno foreign key(deptno) references dept1(deptno),salary number(5))
+
+/
+
+Many to one relationship
+-------------------------
+
+create table salesman(
+salesmanid number(5) constraint salesman_c1_id primary key,
+name varchar2(20),
+city varchar2(20))
+
+drop table customer;
+
+create table customer
+(customerid number(5) constraint customer_c1_id primary key,
+name varchar2(20),
+city varchar2(20))
+
+create table orders(
+orderid number(5) constraint order_c1_id primary key,
+name varchar2(20),
+salesmanid number(5),constraint orders_c2_salesmanid foreign key(salesmanid) references salesman(salesmanid),
+customerid number(5),constraint orders_c3_customerid foreign key(customerid) references customer(customerid))
+
+
+
+
+
+
+

@@ -1,0 +1,68 @@
+
+PLSQL Assignment Question No : 1
+
+1.Write a plsql program to select employee details from emp table
+
+declare
+a number(4);
+b varchar2(10);
+c  varchar2(9);
+begin
+
+select empno,ename,job into a,b,c from emp where empno=&empno;
+dbms_output.put_line(a||'  '||b||'  '||c);
+end;
+
+
+2.Write a program to print the numbers from 1 to 100
+
+declare
+i number:=1;
+n number;
+begin
+n:=&n;
+loop
+dbms_output.put_line(i);
+i:=i+1;
+exit when i>n;
+end loop;
+end;
+
+3.write a program to print the even numbers from 1 to 100
+
+
+
+4.Write a program to print the odd numbers from 1 to 100
+
+declare
+i number:=1;
+n number;
+begin
+n:=&n;
+loop
+dbms_output.put_line(i);
+i:=i+2;
+exit when i>n;
+end loop;
+end;
+
+5.write a program for multiplication table
+
+
+
+6.write a program to find the sum of numbers from 1 to 100
+
+7.Write a program to find the sum of all odd numbers from 1 to 100
+
+8.Write a program to find the sum of all even numbers from 1 to 100
+
+9.Write a program to accept a number and find how many digits it contain
+
+10.Write a program to accept a number and find the sum of the digits
+
+11.Write a program to accept a number and print it in reverse order
+
+12.write a program to select dept details from dept table.
+
+13.Write a program to select salgrade details from salgrade table.
+

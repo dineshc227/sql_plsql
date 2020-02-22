@@ -1,0 +1,525 @@
+DYNAMIC QUERIES OR DYNAMIC SQL:
+-------------------------------
+	A query in a block is provided with input(tablename)at the execution of a program, so that dynamically changes can be made to the query,and will generate the different output.
+
+Note : execute immediate('ddl commands')
+
+--EXAMPLE
+
+DECLARE
+BEGIN
+EXECUTE IMMEDIATE('CREATE TABLE T11(ENAME VARCHAR2(20))');
+END;
+/
+
+
+/* EXAMPLE FOR DYNAMIC SQL */ --ddl commands
+declare
+CNT NUMBER;
+begin
+SELECT COUNT(*) INTO CNT FROM SYS.TAB WHERE TNAME='DEPT21';
+if CNT=0 then
+execute immediate('create table dept21 as select * from dept');
+dbms_output.put_line('table created');
+else
+dbms_output.put_line('table exists');
+end if;
+end;
+/
+
+--how to drop the table?
+
+/* EXAMPLE FOR DYNAMIC SQL */ --ddl commands
+
+declare
+CNT NUMBER;
+begin
+SELECT COUNT(*) INTO CNT FROM SYS.TAB WHERE TNAME='DEPT21';
+if CNT=1 then
+execute immediate('drop table dept21');
+dbms_output.put_line('table droped');
+else
+execute immediate('create table dept21(ename varchar2(10))');
+dbms_output.put_line('table created');
+end if;
+end;
+/
+--how to alter the table?
+
+/* EXAMPLE FOR DYNAMIC SQL */ --ddl commands
+declare
+CNT NUMBER;
+begin
+SELECT COUNT(*) INTO CNT FROM SYS.TAB WHERE TNAME='DEPT21';
+if CNT=1 then 
+execute immediate('alter table dept1 add TL varchar2(10)');
+dbms_output.put_line('table altered');
+else
+dbms_output.put_line('table does not exists');
+end if;
+end;
+/
+
+--Example for Truncate command
+
+declare
+begin
+execute immediate('truncate table emp1');
+dbms_output.put_line('Table Truncated');
+end;
+
+
+
+CREATE OR REPLACE PROCEDURE LEAP_YEAR(Y NUMBER) IS
+BEGIN
+IF MOD(Y,4)=0 THEN
+DBMS_OUTPUT.PUT_LINE('LEAP YEAR='||Y);
+ELSE
+DBMS_OUTPUT.PUT_LINE('NOT LEAP YEAR='||Y);
+END IF;
+END;
+/
+
+1!=1
+2!=1X2=2
+3!=1X2X3=6
+4!=1X2X3X4=24
+
+N!=1X2X3X4....N
+
+
+
+CREATE OR REPLACE PROCEDURE FACT(N NUMBER) IS
+F NUMBER:=1;
+I NUMBER;
+BEGIN
+FOR I IN 1..N
+LOOP
+F:=F*I;
+END LOOP;
+DBMS_OUTPUT.PUT_LINE('FACTORIAL VALUE='||F);
+END;
+/
+
+User defined function :
+----------------------
+
+large programs are divided into small programs is known as function.
+
+oracle function can return 1 value and through 
+out parameter we can return more than one values.
+
+difference between procedure and function:
+
+1) Procedure allow select as well as DML (Insert,update,delete) statement in it whereas function allow only select statement in it.
+
+2)Functions can be called from procedure whereas procedures cannot be called from function.
+
+3) We can go for transaction management in procedure whereas we can't go in function.
+
+4)Procedures can not be utilized in a select statement whereas function can be embedded in a select statement.
+
+exec p1
+select fun1();
+
+
+
+
+syntax:
+
+create or replace function <function_name>(parameterlist) 
+return datatype is
+variable declaration;
+begin
+statement1;
+statement2;
+return value;
+end;
+/
+
+
+--how to invoke function
+select functionname(arglist) from dual;
+
+
+create or replace function sum_nos(a number,b number)
+return number is
+c number;
+begin
+c:=a+b;
+return c;
+end;
+/
+
+
+calling :
+
+select function_name(argumentlist) from <table_name>;
+
+select sum_nos(100,200) from dual;
+
+--Create a function to accept empno as argument and return ename
+
+create or replace function retemp(eno number)
+return varchar2
+is
+name varchar2(20);
+begin
+select ename into name from emp where empno=eno;
+return name;
+end;
+/
+
+--Write a function to return all emp details?
+
+create or replace function retemp(eno number)
+return emp%rowtype
+is
+name emp%rowtype;
+begin
+select * into name from emp where empno=eno;
+return name;
+end;
+/
+
+--How to invoke function?
+
+declare
+e1 emp%rowtype;
+eno number:=&eno;
+begin
+e1:=retemp(eno);
+dbms_output.put_line(e1.ename||'   '||e1.empno||'   '||e1.sal);
+end;
+/
+
+
+
+
+create or replace function square2(a number) return number is
+s number;
+begin
+s:=a*a;
+return s;
+end;
+/
+
+SELECT SQUARE2(10) FROM DUAL;
+
+
+write a plsql program to calculate the factorial value of n numbers:
+
+1!=1
+2!=1x2
+3!=1x2x3
+4!=1x2x3x4
+5!=1x2x3x4x5
+
+N!=1x2x3....xn
+
+create or replace function fact(n number) return number is
+f number:=1;
+i number;
+begin
+for i in 1..n
+loop
+f:=f*i;
+end loop;
+return f;
+end;
+/
+
+
+select fact(5) from dual;
+
+
+
+
+
+
+
+select square2(10) from dual;
+
+
+/* write a plsql program to create the function calculated factorial for given number ,square ,cube value and checks for odd/even numbers; */
+
+create or replace function cal_fact
+(n in number,f out number,s out number,c out number) 
+return boolean is
+fac number:=1;
+begin
+for i in 1..n loop
+fac:=fac *i;
+end loop;
+f:=fac;
+s:=n*n;
+c:=n*n*n;
+if mod(n,2)=0 then
+return(true);
+else
+return (false);
+end if;
+end;
+/
+
+
+
+--How to invoke cal_fact()?
+
+declare
+a number:=&num;
+fact number;
+s number;
+c number;
+begin
+if(cal_fact(a,fact,s,c)) then
+dbms_output.put_line('given numbr is even'||a);
+else
+dbms_output.put_line('given number is odd'||a);
+end if;
+dbms_output.put_line('factorial value='||fact);
+dbms_output.put_line('Square value='||s);
+dbms_output.put_line('Cube value='||c);
+end;
+/
+
+
+/* Write a funtion to return 2 values */
+
+CREATE OR REPLACE FUNCTION TEST
+(A NUMBER,B NUMBER,SMALL OUT NUMBER)
+RETURN NUMBER IS
+BEGIN
+IF A<B THEN
+SMALL:=A;
+ELSE
+SMALL:=B;
+END IF;
+IF A>B THEN
+RETURN A;
+ELSE 
+RETURN B;
+END IF;
+END;
+/
+
+calling1.sql
+DECLARE
+A NUMBER;
+B NUMBER;
+SMALL NUMBER;
+BIG NUMBER;
+BEGIN
+A:=&A;
+B:=&B;
+BIG:=TEST(A,B,SMALL);
+DBMS_OUTPUT.PUT_LINE('BIGGER VALUES='||BIG);
+DBMS_OUTPUT.PUT_LINE('SMALL VALUES='||SMALL);
+END;
+/
+
+
+
+
+write a plsql program to display the reverse digit
+n=789 o/p = 987
+
+s:=0;
+while (n>0)
+{
+r=n%10;
+s=s*10+r;
+n=n/10;
+}
+
+s:=0
+while n>0
+loop
+r:=trunc(mod(n,10),0);
+s:=s*10+r;
+n:=trunc(n/10,0);
+end loop;
+
+
+
+Sum of Digits:
+---------------
+while (n>0)
+{
+r=n%10;
+s=s+r;
+n=n/10;
+}
+
+
+Count of Digits:
+----------------
+
+while (n>0)
+{
+r=n%10;
+s=s+1;
+n=n/10;
+}
+
+
+create or replace function reverse_digit(n number) return number is
+r number;
+s number:=0;
+n1 number;
+begin
+n1:=n;
+while n1>0
+loop
+r:=mod(n1,10);
+s:=s*10+r;
+n1:=trunc(n1/10,0);
+end loop;
+return s;
+end;
+/
+
+
+write a plsql program to display the sum of digit
+
+n=89494    o/p=34
+n=1234      o/p=10
+
+create or replace function sum_digit(n number) return number is
+r number;
+s number:=0;
+n1 number;
+begin
+n1:=n;
+while n1>0
+loop
+r:=mod(n1,10);
+s:=s+r;
+n1:=trunc(n1/10,0);
+end loop;
+n1:=s;
+s:=0;
+while n1>0
+loop
+r:=mod(n1,10);
+s:=s+r;
+n1:=trunc(n1/10,0);
+end loop;
+
+return s;
+end;
+/
+
+write  a plsql program to count the number of digit
+
+
+n=84948       o/p = 5
+
+create or replace function count_digit(n number) return number is
+r number;
+s number:=0;
+n1 number;
+begin
+n1:=n;
+while n1>0
+loop
+r:=mod(n1,10);
+s:=s+1;
+n1:=trunc(n1/10,0);
+end loop;
+return s;
+end;
+/
+
+
+write a plsql program to find the given string is palindrome or not palindromes
+
+madam = madam
+radar =radar
+malayalam = malayalam
+
+eye=eye
+liril = liril
+saras = saras
+dad =dad
+nitin= nitin
+
+
+
+
+create or replace function palindrome(a varchar2) 
+return varchar2 is
+s varchar2(20);
+r varchar2(20);
+n varchar2(20);
+begin
+n:=a;
+select reverse(n) into r from dual;
+if n=r then
+s:='palindrome';
+else
+s:='not palindrome';
+end if;
+return s;
+end;
+/
+
+--To create a function to convert decimal into binary
+
+create or replace FUNCTION DectoBin(a int)
+RETURN varchar2
+is
+b varchar2(20):=' ';
+n int;
+BEGIN
+n:=a;
+WHILE (n > 0) 
+loop
+	
+	 b:= b || CAST(trunc(mod(n,2)) AS varchar); -- or to_char()
+	 n:=trunc(n/2);
+END loop;
+select reverse(b) into b from dual;
+return b;
+END;
+/
+--How to convert decimal into octal?
+
+create or replace FUNCTION Dectooct(a int)
+RETURN varchar2
+is
+b varchar2(20):=' ';
+n int;
+BEGIN
+n:=a;
+WHILE (n > 0) 
+loop
+	
+	 b:= b || CAST(trunc(mod(n,8)) AS varchar);
+	 n:=trunc(n/8);
+END loop;
+
+	select reverse(b) into b from dual;
+return b;
+END;
+/
+
+
+
+
+sql> select retemp(7902) from dual;
+
+--how to know howmany functions are created?
+
+sql> desc user_source;
+
+sql> select * from user_source;
+
+--HOW TO OPEN THE FUNCTION CODE?
+
+select TEXT FROM USER_SOURCE WHERE NAME='PALINDROME';
+
+
+SQL> DROP FUNCTION <FUNCTIONNAME>;
+
+

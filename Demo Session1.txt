@@ -1,0 +1,186 @@
+		SQL & PL-SQL COURSE
+
+(Applicable for SQL Developers,Pl-sql Developers, BI Developers, Business Analysts,  Data Scientists,oracle DBA,Java Developer,ETL Developer,python Developer,Testing,Tableau Developer)
+
+
+
+What SQL Developers do (overview)?
+
+a.Plan and Design Databases for Data Storage.
+
+b.Plan and Design Tables and Relations.
+
+c.Design Verification and (Initial) Capacity Planning.
+
+d.Implementing Normalization with schemas.
+
+
+e.Writing Queries for Business Requirements. Testing Queries.
+
+f.Using Joins,Sub Queries, Nested Queries, Data Aggregations.
+
+g.Query Writing with Views,Functions, Date & Time, String operations.
+
+H.Data Formatting for Reporting Needs, Data Transformation.
+
+
+I. Data Validations and (Dynamic) Data Inserts
+ 
+J. Conditional & Transactional DMLs with Procedures.
+
+K. Data Audits and DML / DDL Executions with Triggers and Procedures.
+
+L. Transactional Integrity Constraints etc....
+
+
+Training Highlights:
+---------------------
+
+* Completely Real-time & Practical
+
+* Theory Material + Lab Practicals
+
+* Real-time Case studies with Solutions.
+
+* One Real-time Project with complete spec and solutions.
+
+* Job Support and Placement Assistance.
+
+
+By end of the course:
+---------------------
+* Ready to crack any Interview.
+
+* Ready for your job (upon completion of project work + solution Explanation)
+
+* Market your Resume from SQL SChool
+
+* Linked in mention from SQL School.
+				Oracle 
+				(RDBMS)
+			(Oracle corportion)
+
+Popular RDBMS Products:
+----------------------
+1.Oracle
+2.Sqlserver
+3.Mysql
+4.DB2
+5.sybase
+6.ingres
+7.Teradata
+8.MSaccess
+9.postgre
+
+
+
+sql + plsql  (2 hrs)
+ 2 weeks  + 2 weeks + 1weeks => 5weeks
+
+SQL : Structured Query Language.
+
+SQL is a common database language.
+
+SQL was developed by IBM.
+
+SQUARE : Specification of Query As Relational expression
+
+1973 : SEQUEL (Structured English Query language)
+
+1978 : SQL ( Structured Query Language)
+
+SQL Sublanguage:
+----------------
+DDL - DATA DEFINATION LANGUAGE
+DML - DATA MANIPULATION LANGUAGE
+DCL - DATA CONTROL LANGUAGE
+DQL /DRL  - DATA QUERY LANGUAGE / DATA RETERIVAL LANGUAGE
+TCL - TRANSACTION CONTROL LANGUAGE
+
+
+DDL - CREATE,ALTER,TRUNCATE,DROP,RENAME
+
+DML - INSERT,UPDATE,DELETE,MERGE
+
+DCL - GRANT,REVOKE (ORACLE DBA)
+
+TCL - COMMIT,ROLLBACK,SAVEPOINT
+
+DQL - SELECT (DAY TO DAY WORK)
+
+
+Database objects:
+-----------------
+1.Table
+2.View
+3.Synonym
+4.Sequence
+5.Index
+6.Procedure
+7.Function
+8.Trigger or Database Trigger
+9.package
+			
+			employee
+		ename	empno	salary (Fieldname)
+		aaa	1001	20000  Record/Tuple
+		bbb	1002	30000
+		ccc	1003	40000
+		ddd	1004	50000
+		eee	1005	46000
+		swami	1006	35000
+		pavan	1007	60000
+		prasan	1008	34500
+		sri	1009	30000
+		Teja	1010	50000
+		Field/Attribute		
+
+		
+Data : collection of information
+
+ Field : Each column in a table is called as Field or collection of related data is called as Field.
+
+Record : Each row in a table is called as Record or collection of related fields are called Record.
+
+Table : collection of related records are called Table.
+
+Database: Collection of realted tables are called Database.
+
+DBMS : It is a software used to insert,update,delete the records in single table.
+
+RDBMS: It is a software used to insert,update,delete the records in related table.
+
+SQL : Structured Query Language.
+
+DDL : create,alter,truncate,drop,rename
+
+DML : insert,update,delete,merge
+
+DQL : select
+
+TCL : commit,rollback,savepoint
+
+DCL : Grant,revoke (oracle dba)
+
+Oracle Versions:
+----------------
+1978 - Oracle Release 1
+1979 - Oracle release 2
+1983 - Oracle release 3
+1984 - Oracle release 4
+1985 - Oracle release 5
+1988 - Oracle release 6
+1992 - Oracle release 7
+1997 - Oracle release 8
+1998 - Oracle release 8i
+2001 - Oracle release 9i
+2003 - Oracle release 10g
+2007 - Oracle release 11g
+2013 - Oracle release 12C
+2018 - Oracle release 18C
+2019 - Oracle release 19C
+
+
+Oracle 19c/18c/12c/11g Database Link
+http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html
+
